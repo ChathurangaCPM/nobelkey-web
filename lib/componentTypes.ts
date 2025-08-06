@@ -1,0 +1,735 @@
+type ServiceType = {
+    title?: string;
+    description?: string;
+    icon?: string;
+};
+
+type TestimonialType = {
+    name?: string;
+    comment?: string;
+    rating?: number;
+    image?: string;
+};
+
+type TestimonialRightType = {
+    title?: string;
+    description?: string;
+    icon?: string;
+};
+
+// Define a union type for all possible default values
+type DefaultValueType = string | number | ServiceType[] | TestimonialType[] | TestimonialRightType[];
+
+export interface ComponentProp {
+    name: string;
+    type: "text" |
+        "textarea" |
+        "select" |
+        "color" |
+        "number" |
+        "mainImage" |
+        "image" |
+        "welcomeSection" |
+        "numberResults" |
+        "featuredServices" |
+        "recentProjects" |
+        "ourBrandRow" |
+        "serviceRepeater" |
+        "testimonials" |
+        "groupTitle" |
+        "getQuote" |
+        "testimonialsRightRepeater";
+    options?: string[];
+    displayName?: string;
+    defaultValue: DefaultValueType;
+}
+
+// Define a more specific type for component props
+type ComponentPropsType = string | undefined | ServiceType[] | TestimonialType[] | TestimonialRightType[];
+
+export interface ComponentType {
+    name: string;
+    category: "basic" | "custom" | "home";
+    defaultProps: Record<string, ComponentPropsType>;
+    customName: string;
+    propDefinitions?: ComponentProp[];
+}
+
+export interface Component {
+    id: string;
+    type: string;
+    customName: string;
+    props: Record<string, ComponentPropsType>;
+}
+
+export const COMPONENT_TYPES: ComponentType[] = [
+    // {
+    //     name: "Button",
+    //     category: "basic",
+    //     defaultProps: {
+    //         text: "Button Text",
+    //         variant: "default",
+    //     }
+    // },
+    // {
+    //     name: "Heading",
+    //     category: "basic",
+    //     defaultProps: {
+    //         text: "Heading Text",
+    //         size: "h2",
+    //     }
+    // },
+    // {
+    //     name: "Paragraph",
+    //     category: "basic",
+    //     defaultProps: {
+    //         text: "Paragraph content",
+    //     }
+    // },
+    {
+        name: "Main Banner",
+        category: "home",
+        customName: "mainBanner",
+        defaultProps: {
+            imageUrl: "",
+            carImage: "",
+            alt: "Image description",
+        },
+        propDefinitions: [
+            {
+                name: "imageUrl",
+                type: "mainImage",
+                displayName: "Select Main Background Image",
+                defaultValue: ""
+            },
+            {
+                name: "alt",
+                type: "text",
+                displayName: "Image Description",
+                defaultValue: "Image description"
+            },
+            {
+                name: "carImage",
+                type: "image",
+                displayName: "Select Car Image",
+                defaultValue: ""
+            },
+        ]
+    },
+    {
+        name: "Welcome Section",
+        category: "home",
+        customName: "welcomeSection",
+        defaultProps: {
+            imageUrl: "",
+            secondImageUrl: "",
+            topTagline: "",
+            title: "",
+            description: "",
+            userImage: "",
+            founderName: "",
+            callForTaxi: "",
+        },
+        propDefinitions: [
+            {
+                name: "imageUrl",
+                displayName: "Select First Image",
+                type: "image",
+                defaultValue: ""
+            },
+            {
+                name: "secondImageUrl",
+                displayName: "Select Second Image",
+                type: "image",
+                defaultValue: ""
+            },
+            {
+                name: "topTagline",
+                displayName: "Top tagline",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "title",
+                displayName: "Main Title",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "description",
+                displayName: "Description",
+                type: "textarea",
+                defaultValue: ""
+            },
+            {
+                name: "userImage",
+                displayName: "Select User Image",
+                type: "image",
+                defaultValue: ""
+            },
+            {
+                name: "founderName",
+                displayName: "Founder Name",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "callForTaxi",
+                displayName: "Contact Number",
+                type: "text",
+                defaultValue: ""
+            },
+        ]
+    },
+    {
+        name: "Number Results",
+        category: "home",
+        customName: "numberResults",
+        defaultProps: {
+            imageUrl: "",
+            secondImageUrl: "",
+            topTagline: "",
+            title: "",
+            description: "",
+            userImage: "",
+            founderName: "",
+            callForTaxi: "",
+        },
+        propDefinitions: [
+            {
+                name: "imageUrl",
+                displayName: "Select First Image",
+                type: "image",
+                defaultValue: ""
+            },
+            {
+                name: "secondImageUrl",
+                displayName: "Select Second Image",
+                type: "image",
+                defaultValue: ""
+            },
+            {
+                name: "topTagline",
+                displayName: "Top tagline",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "title",
+                displayName: "Main Title",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "description",
+                displayName: "Description",
+                type: "textarea",
+                defaultValue: ""
+            },
+            {
+                name: "userImage",
+                displayName: "Select User Image",
+                type: "image",
+                defaultValue: ""
+            },
+            {
+                name: "founderName",
+                displayName: "Founder Name",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "callForTaxi",
+                displayName: "Contact Number",
+                type: "text",
+                defaultValue: ""
+            },
+        ]
+    },
+    {
+        name: "Featured Services",
+        category: "home",
+        customName: "featuredServices",
+        defaultProps: {
+            imageUrl: "",
+            secondImageUrl: "",
+            topTagline: "",
+            title: "",
+            description: "",
+            userImage: "",
+            founderName: "",
+            callForTaxi: "",
+        },
+        propDefinitions: [
+            {
+                name: "imageUrl",
+                displayName: "Select First Image",
+                type: "image",
+                defaultValue: ""
+            },
+            {
+                name: "secondImageUrl",
+                displayName: "Select Second Image",
+                type: "image",
+                defaultValue: ""
+            },
+            {
+                name: "topTagline",
+                displayName: "Top tagline",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "title",
+                displayName: "Main Title",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "description",
+                displayName: "Description",
+                type: "textarea",
+                defaultValue: ""
+            },
+            {
+                name: "userImage",
+                displayName: "Select User Image",
+                type: "image",
+                defaultValue: ""
+            },
+            {
+                name: "founderName",
+                displayName: "Founder Name",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "callForTaxi",
+                displayName: "Contact Number",
+                type: "text",
+                defaultValue: ""
+            },
+        ]
+    },
+    {
+        name: "Recent Projects",
+        category: "home",
+        customName: "recentProjects",
+        defaultProps: {
+            backgroundImage: "",
+            topTagline: "",
+            title: "",
+            description: "",
+            services: []
+        },
+        propDefinitions: [
+            {
+                name: "backgroundImage",
+                displayName: "Select a Background Image",
+                type: "image",
+                defaultValue: ""
+            },
+            {
+                name: "topTagline",
+                displayName: "Top tagline",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "title",
+                displayName: "Main Title",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "description",
+                displayName: "Description",
+                type: "textarea",
+                defaultValue: ""
+            },
+            {
+                name: "services",
+                displayName: "Services",
+                type: "serviceRepeater",
+                defaultValue: []
+            },
+        ]
+    },
+    {
+        name: "Our Brand Row",
+        category: "home",
+        customName: "ourBrandRow",
+        defaultProps: {
+            backgroundImage: "",
+            topTagline: "",
+            title: "",
+            description: "",
+            services: []
+        },
+        propDefinitions: [
+            {
+                name: "backgroundImage",
+                displayName: "Select a Background Image",
+                type: "image",
+                defaultValue: ""
+            },
+            {
+                name: "topTagline",
+                displayName: "Top tagline",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "title",
+                displayName: "Main Title",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "description",
+                displayName: "Description",
+                type: "textarea",
+                defaultValue: ""
+            },
+            {
+                name: "services",
+                displayName: "Services",
+                type: "serviceRepeater",
+                defaultValue: []
+            },
+        ]
+    },
+    {
+        name: "What We Offer",
+        category: "home",
+        customName: "whatWeOffer",
+        defaultProps: {
+            backgroundImage: "",
+            topTagline: "",
+            title: "",
+            description: "",
+            services: []
+        },
+        propDefinitions: [
+            {
+                name: "backgroundImage",
+                displayName: "Select a Background Image",
+                type: "image",
+                defaultValue: ""
+            },
+            {
+                name: "topTagline",
+                displayName: "Top tagline",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "title",
+                displayName: "Main Title",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "description",
+                displayName: "Description",
+                type: "textarea",
+                defaultValue: ""
+            },
+            {
+                name: "services",
+                displayName: "Services",
+                type: "serviceRepeater",
+                defaultValue: []
+            },
+        ]
+    },
+    {
+        name: "Book Your Ride",
+        category: "home",
+        customName: "bookYourRide",
+        defaultProps: {
+            leftImage: "",
+            topTagline: "",
+            title: "",
+        },
+        propDefinitions: [
+            {
+                name: "leftImage",
+                displayName: "Select a Image",
+                type: "image",
+                defaultValue: ""
+            },
+            {
+                name: "topTagline",
+                displayName: "Top tagline",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "title",
+                displayName: "Main Title",
+                type: "text",
+                defaultValue: ""
+            },
+        ]
+    },
+    {
+        name: "Choose Your Ride",
+        category: "home",
+        customName: "chooseYourRide",
+        defaultProps: {
+            topTagline: "",
+            title: "",
+            descriptions: ""
+        },
+        propDefinitions: [
+            {
+                name: "topTagline",
+                displayName: "Top tagline",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "title",
+                displayName: "Main Title",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "descriptions",
+                displayName: "Description",
+                type: "textarea",
+                defaultValue: ""
+            },
+        ]
+    },
+    {
+        name: "Testimonials",
+        category: "home",
+        customName: "testimonials",
+        defaultProps: {
+            leftTopTagline: "Customer reviews",
+            leftTitle: "What our customers say",
+            leftDescriptions: "We provide the best service in the city. The city that you can trust and feel comfortable with. We have the best drivers who take care of your journey.",
+            testimonials: [],
+
+            groupTitle: "",
+
+            rightTopTagline: "Why Choose Us",
+            rightTitle: "Why Ride with CityCabs?",
+            rightDescriptions: "We provide the best service in the city. The city that you can trust and feel comfortable with. We have the best drivers who take care of your journey.",
+            testimonialsRightRepeater: [],
+        },
+        propDefinitions: [
+            {
+                name: "leftTopTagline",
+                displayName: "Left Top tagline",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "leftTitle",
+                displayName: "Left Main Title",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "leftDescriptions",
+                displayName: "Left Description",
+                type: "textarea",
+                defaultValue: ""
+            },
+            {
+                name: "testimonials",
+                displayName: "Testimonials",
+                type: "testimonials",
+                defaultValue: []
+            },
+            {
+                name: "groupTitle",
+                displayName: "Right Col data",
+                type: "groupTitle",
+                defaultValue: ""
+            },
+
+            {
+                name: "rightTopTagline",
+                displayName: "Right Top tagline",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "rightTitle",
+                displayName: "Right Main Title",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "rightDescriptions",
+                displayName: "Right Description",
+                type: "textarea",
+                defaultValue: ""
+            },
+            {
+                name: "testimonialsRightRepeater",
+                displayName: "Highlighted Rows",
+                type: "testimonialsRightRepeater",
+                defaultValue: []
+            },
+
+            // testimonialsRightRepeater
+        ]
+    },
+
+    {
+        name: "Call Us Now",
+        category: "home",
+        customName: "callUsNow",
+        defaultProps: {
+            mainTitle: "",
+            description: "",
+            contactNumber: "",
+            rightImage: "",
+        },
+        propDefinitions: [
+            {
+                name: "mainTitle",
+                displayName: "Main Title",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "description",
+                displayName: "Description",
+                type: "textarea",
+                defaultValue: ""
+            },
+            {
+                name: "contactNumber",
+                displayName: "Contact Number",
+                type: "number",
+                defaultValue: ""
+            },
+            {
+                name: "rightImage",
+                displayName: "Select a right image",
+                type: "image",
+                defaultValue: ""
+            },
+        ]
+    },
+    {
+        name: "Blog Section",
+        category: "home",
+        customName: "blogSection",
+        defaultProps: {
+            mainTitle: "",
+            description: "",
+            contactNumber: "",
+            rightImage: "",
+        },
+        propDefinitions: [
+            {
+                name: "mainTitle",
+                displayName: "Main Title",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "description",
+                displayName: "Description",
+                type: "textarea",
+                defaultValue: ""
+            },
+            {
+                name: "contactNumber",
+                displayName: "Contact Number",
+                type: "number",
+                defaultValue: ""
+            },
+            {
+                name: "rightImage",
+                displayName: "Select a right image",
+                type: "image",
+                defaultValue: ""
+            },
+        ]
+    },
+    {
+        name: "Get Quote",
+        category: "home",
+        customName: "getQuote",
+        defaultProps: {
+            mainTitle: "",
+            description: "",
+            contactNumber: "",
+            rightImage: "",
+        },
+        propDefinitions: [
+            {
+                name: "mainTitle",
+                displayName: "Main Title",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "description",
+                displayName: "Description",
+                type: "textarea",
+                defaultValue: ""
+            },
+            {
+                name: "contactNumber",
+                displayName: "Contact Number",
+                type: "number",
+                defaultValue: ""
+            },
+            {
+                name: "rightImage",
+                displayName: "Select a right image",
+                type: "image",
+                defaultValue: ""
+            },
+        ]
+    },
+    // {
+    //     name: "CustomCard",
+    //     category: "custom",
+    //     defaultProps: {
+    //         title: "Card Title",
+    //         description: "Card Description",
+    //         variant: "default",
+    //         backgroundColor: "#ffffff",
+    //         padding: "4"
+    //     },
+    //     propDefinitions: [
+    //         {
+    //             name: "title",
+    //             type: "text",
+    //             defaultValue: "Card Title"
+    //         },
+    //         {
+    //             name: "description",
+    //             type: "text",
+    //             defaultValue: "Card Description"
+    //         },
+    //         {
+    //             name: "variant",
+    //             type: "select",
+    //             options: ["default", "bordered", "elevated", "flat"],
+    //             defaultValue: "default"
+    //         },
+    //         {
+    //             name: "backgroundColor",
+    //             type: "color",
+    //             defaultValue: "#ffffff"
+    //         },
+    //         {
+    //             name: "padding",
+    //             type: "select",
+    //             options: ["2", "4", "6", "8"],
+    //             defaultValue: "4"
+    //         }
+    //     ]
+    // }
+];
