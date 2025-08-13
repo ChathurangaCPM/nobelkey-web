@@ -42,6 +42,8 @@ const componentMap = {
 
 
 
+
+
 // Helper function to get the base URL
 function getBaseUrl() {
     if (process.env.NEXT_PUBLIC_SITE_URL) {

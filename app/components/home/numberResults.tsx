@@ -27,6 +27,7 @@ const NumberResults: React.FC<NumberResultsProps> = ({
     // Get the last item for special styling
     const lastItem = rowItems[rowItems.length - 1];
     const otherItems = rowItems.slice(0, -1);
+    
 
     const renderIcon = (iconName: string, isLast: boolean = false) => {
         // Dynamically get the icon component from lucide-react
@@ -89,7 +90,7 @@ const NumberResults: React.FC<NumberResultsProps> = ({
                     </div>
                 ))}
 
-                
+
 
                 {/* Last Item with Special Structure */}
                 {lastItem && (
