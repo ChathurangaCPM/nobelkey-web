@@ -89,6 +89,8 @@ const NumberResults: React.FC<NumberResultsProps> = ({
                     </div>
                 ))}
 
+                
+
                 {/* Last Item with Special Structure */}
                 {lastItem && (
                     <div className="flex gap-3 justify-end relative overflow-hidden xl:mb-36">
