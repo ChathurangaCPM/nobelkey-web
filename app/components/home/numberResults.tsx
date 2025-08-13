@@ -77,7 +77,7 @@ const NumberResults: React.FC<NumberResultsProps> = ({
                 {otherItems.map((item, index) => (
                     <div key={item.id} className="flex gap-3 justify-end relative overflow-hidden w-full md:w-10/12 xl:max-w-[1400px] mx-auto">
                         <div className="flex items-end w-full xl:max-w-[50%] border-b-[1px] border-white/10 justify-end group">
-                            <div className="flex flex-1 xl:w-[60%]">
+                            <div className="flex flex-1 xl:w-[60%] justify-end">
                                 <div className="overflow-hidden flex items-baseline gap-2 text-[75px] xl:text-[180px] transition-all ease-in-out duration-500 group-hover:translate-y-0 xl:translate-y-8 font-barlow-condensed font-normal leading-[100px] xl:leading-[160px]">
                                     {item.number} {renderIcon(item.icon)}
                                 </div>

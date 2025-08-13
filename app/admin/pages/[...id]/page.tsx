@@ -46,7 +46,6 @@ export default async function PageDetails({ params }: { params: { id: string[] }
             </Suspense>
         );
     } catch (error) {
-        console.log("error", error);
         
         return (
             <div className="flex items-center justify-center min-h-screen">

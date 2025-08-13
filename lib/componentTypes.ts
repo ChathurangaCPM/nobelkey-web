@@ -510,6 +510,52 @@ export const COMPONENT_TYPES: ComponentType[] = [
             },
         ]
     },
+    {
+        name: "Banner",
+        category: "basic",
+        customName: "innerBanner",
+        defaultProps: {
+            backgroundImage: "",
+            mainTitle: "",
+            subLine: "",
+        },
+        propDefinitions: [
+            {
+                name: "backgroundImage",
+                displayName: "Header Background Image",
+                type: "image",
+                defaultValue: ""
+            },
+            {
+                name: "mainTitle",
+                displayName: "Page Main Title",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "subLine",
+                displayName: "Sub Text Line",
+                type: "text",
+                defaultValue: ""
+            },
+        ]
+    },
+    {
+        name: "General Content",
+        category: "basic",
+        customName: "generalContent",
+        defaultProps: {
+            content: "",
+        },
+        propDefinitions: [
+            {
+                name: "content",
+                displayName: "Add a general content",
+                type: "textarea",
+                defaultValue: ""
+            },
+        ]
+    },
     // {
     //     name: "Book Your Ride",
     //     category: "home",

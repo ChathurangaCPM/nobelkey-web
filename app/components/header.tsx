@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { AlignJustify, LucideIcon } from "lucide-react";
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 
@@ -20,17 +21,63 @@ interface MainContent {
 
 const Header: React.FC = () => {
     const { siteState } = useSiteContext();
+    const pathname = usePathname();
     const [prevScrollPos, setPrevScrollPos] = useState(0);
     const [visible, setVisible] = useState(true);
     const [openSheet, setOpenSheet] = useState(false);
-    const [hasScrolled, setHasScrolled] = useState(false); // New state for background
+    const [hasScrolled, setHasScrolled] = useState(false);
 
     const [headerData, setHeaderData] = useState(siteState?.header || {});
+
+    const navigationItems = [
+        { name: 'Home', href: '/' },
+        { name: 'NobleKey', href: '/noblekey' },
+        { name: 'Our Services', href: '/our-services' },
+        { name: 'Our Products', href: '/our-products' },
+        { name: 'Contact Us', href: '/contact-us' }
+    ];
+
+    const mobileNavigationItems = [
+        { name: 'Home', href: '/' },
+        { name: 'Company', href: '/company' },
+        { name: 'Our Taxi', href: '/our-taxi' },
+        { name: 'Blog', href: '/blog' },
+        { name: 'Contact', href: '/contact' }
+    ];
 
     const getIcon = (iconName: string) => {
         const Icon = iconName ? (LucideIcons[iconName as keyof typeof LucideIcons] as LucideIcon) : null;
         return Icon ? <Icon className="text-yellow-400" /> : null;
     }
+
+    const isActiveLink = (href: string) => {
+        if (href === '/') {
+            return pathname === '/';
+        }
+        return pathname === href || pathname.startsWith(href + '/');
+    };
+
+    const getLinkClassName = (href: string) => {
+        const baseClasses = "px-3 first:pl-0 font-normal transition-colors border-r-[1px] border-[#808285] last:border-r-0 leading-3 tracking-tighter";
+        const isActive = isActiveLink(href);
+        
+        if (isActive) {
+            return `${baseClasses} text-white font-medium relative after:content-[''] after:absolute after:bottom-[-8px] after:left-3 after:right-3 after:h-[2px] after:bg-yellow-400 after:rounded-full`;
+        }
+        
+        return `${baseClasses} text-[#808285] hover:text-white`;
+    };
+
+    const getMobileLinkClassName = (href: string) => {
+        const baseClasses = "px-2 py-2 transition-colors rounded-md";
+        const isActive = isActiveLink(href);
+        
+        if (isActive) {
+            return `${baseClasses} text-blue-900 bg-blue-50 font-medium border-l-4 border-blue-900`;
+        }
+        
+        return `${baseClasses} text-black hover:text-blue-900 hover:bg-gray-50`;
+    };
 
     useEffect(() => {
         const handleScroll = () => {
@@ -66,10 +113,18 @@ const Header: React.FC = () => {
         setHeaderData(siteState.header)
     }, [siteState])
 
+    const isHomePage = pathname === '/';
+
     return (
-        <div className={`w-full xl:w-full fixed top-0 z-50 left-0 transition-all duration-300 ${visible ? 'translate-y-0' : ''} ${hasScrolled ? 'bg-[#0F1A42]/90 backdrop-blur-sm' : 'bg-transparent'}`}>
+        <div className={`w-full xl:w-full fixed top-0 z-50 left-0 transition-all duration-300 ${visible ? 'translate-y-0' : ''} ${
+            !isHomePage 
+                ? 'bg-[#0F1A42]/95 backdrop-blur-md' 
+                : hasScrolled 
+                    ? 'bg-[#0F1A42]/90 backdrop-blur-sm' 
+                    : 'bg-transparent'
+        }`}>
             {/* Main header */}
-            <div className={`w-11/12 xl:max-w-[1400px] border-b border-white/15 mx-auto flex justify-between items-center px-2 md:px-0 relative z-30 transition-all duration-300 ${!visible ? 'py-1' : 'py-4'}`}>
+            <div className={`w-11/12 xl:max-w-[1400px] border-b border-white/15 mx-auto flex justify-between items-center px-2 md:px-0 relative z-30 transition-all duration-300 ${!visible || !isHomePage ? 'py-1' : 'py-4'}`}>
                 <div className='text-[#808285] flex-1 text-[15px]'>
                     <div className='xl:hidden'>
                         <Button variant={'ghost'} className='focus:bg-transparent focus:text-black' onClick={() => setOpenSheet(true)}>
@@ -79,13 +134,13 @@ const Header: React.FC = () => {
                     </div>
 
                     <nav className="hidden xl:flex">
-                        {['Home', 'NobleKey', 'Our Services', 'Our Products', 'Contact Us'].map((item, key) => (
+                        {navigationItems.map((item) => (
                             <Link
-                                key={item}
-                                href={item === 'Home' ? '/' : `/${item.toLowerCase().replace(' ', '-')}`}
-                                className={`px-3 first:pl-0 font-normal hover:text-white transition-colors border-r-[1px] border-[#808285] last:border-r-0 leading-3 tracking-tighter`}
+                                key={item.name}
+                                href={item.href}
+                                className={getLinkClassName(item.href)}
                             >
-                                {item}
+                                {item.name}
                             </Link>
                         ))}
                     </nav>
@@ -109,14 +164,15 @@ const Header: React.FC = () => {
                     <SheetHeader>
                         <SheetTitle></SheetTitle>
                     </SheetHeader>
-                    <div className='flex flex-col'>
-                        {['Home', 'Company', 'Our Taxi', 'Blog', 'Contact'].map((item) => (
+                    <div className='flex flex-col gap-1 mt-4'>
+                        {mobileNavigationItems.map((item) => (
                             <Link
-                                key={item}
-                                href={item === 'Home' ? '/' : `/${item.toLowerCase().replace(' ', '-')}`}
-                                className="px-2 py-2 text-black hover:text-blue-900 transition-colors"
+                                key={item.name}
+                                href={item.href}
+                                className={getMobileLinkClassName(item.href)}
+                                onClick={() => setOpenSheet(false)}
                             >
-                                {item}
+                                {item.name}
                             </Link>
                         ))}
                     </div>

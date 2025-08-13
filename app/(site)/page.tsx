@@ -48,7 +48,7 @@ function getBaseUrl() {
   if (process.env.SITE_ENV === 'development') {
     return 'http://localhost:1222';
   }
-  return process.env.NEXTAUTH_URL || 'https://citycabsfrance.lk';
+  return process.env.NEXTAUTH_URL || 'https://noblekey.lk';
 }
 
 async function getHomePageData() {

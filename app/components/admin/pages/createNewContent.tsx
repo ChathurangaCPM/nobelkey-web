@@ -20,12 +20,9 @@ import WhatWeDo from "./preview/whatWeDo";
 
 import TestimonialsRepeater from "./custom/testimonialsRepeater";
 import TestimonialsRightRepeater from "./custom/testimonialsRightRepeater";
-import TestimonialsPreview from "./preview/testimonialsView";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import CallUsNowPreview from "./preview/callUsNow";
 
-import BookYourRide from "./preview/bookYourRide";
-import ChooseYourRide from "./preview/chooseYourRide";
+
 import SliderItems from "./custom/sliderItems";
 import NumberResults from "./preview/numberResults";
 import NumberItems from "./custom/numberItems";
@@ -39,6 +36,8 @@ import BlogSection from "../../home/blogSection";
 import BlogItems from "./custom/blogItems";
 import GetQuote from "../../home/getQuote";
 import MainBanner from "../../mainBanner";
+import InnerBanner from "../../innerPages/innerBanner";
+import GeneralContent from "../../innerPages/generalContent";
 
 interface CreateNewContentProps {
   data?: string[];
@@ -162,6 +161,11 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
         return <BlogSection {...component.props}  />;
       case "getQuote":
         return <GetQuote {...component.props} isAdmin/>;
+      // inner page components
+      case "innerBanner":
+        return <InnerBanner {...component.props} isAdmin/>;
+      case "generalContent":
+        return <GeneralContent {...component.props}/>;
       default:
         return null;
     }
