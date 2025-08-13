@@ -4,19 +4,13 @@ import PageComponent from "@/app/components/admin/pages/pageComponent";
 import { Suspense } from "react";
 import { headers } from 'next/headers';
 
-function getBaseUrl() {
-    if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-    return process.env.NEXTAUTH_URL || 'http://localhost:1234';
-}
-
 async function getAllPages() {
     try {
-        const baseUrl = getBaseUrl();
         
         const headersList = headers();
         const cookieHeader = headersList.get('cookie');
         
-        const response = await fetch(`${baseUrl}/api/admin/page`, {
+        const response = await fetch(`${process.env.NEXTAUTH_URL}/api/admin/page`, {
             method: 'GET',
             headers: {
                 Cookie: cookieHeader || '', // Forward the cookies
