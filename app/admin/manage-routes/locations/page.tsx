@@ -133,7 +133,8 @@ const ManageLocationRoutes: React.FC = () => {
             }));
 
             toast.success("Successfully updated!", {
-                position: 'top-center'
+                position: 'top-center',
+                richColors: true,
             });
         } catch (error) {
             console.log("error", error);

@@ -109,7 +109,8 @@ const HomePageSettings = () => {
             }));
 
             toast.success("Settings saved successfully!", {
-                position: 'top-center'
+                position: 'top-center',
+                richColors: true,
             });
         } catch (error) {
             console.log("error", error);

@@ -195,6 +195,7 @@ const BookingDetailsView: React.FC<BookingDetailsViewProps> = ({
 
             toast.success("Booking Successfully", {
                 position: 'top-center',
+                richColors: true,
             });
             setIsLoading(false);
             setIsCompleteScreen(true);

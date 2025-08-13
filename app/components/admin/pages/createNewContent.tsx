@@ -6,7 +6,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Trash2 } from "lucide-react";
+import { Trash2, GripVertical } from "lucide-react";
 import AddNewComponent from "./addNewComponent";
 import { Component, COMPONENT_TYPES, ComponentProp } from "@/lib/componentTypes";
 
@@ -23,9 +23,22 @@ import TestimonialsRightRepeater from "./custom/testimonialsRightRepeater";
 import TestimonialsPreview from "./preview/testimonialsView";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import CallUsNowPreview from "./preview/callUsNow";
-import MainBanner from "./preview/mainBanner";
+
 import BookYourRide from "./preview/bookYourRide";
 import ChooseYourRide from "./preview/chooseYourRide";
+import SliderItems from "./custom/sliderItems";
+import NumberResults from "./preview/numberResults";
+import NumberItems from "./custom/numberItems";
+import FeaturedServices from "./preview/featuredServices";
+import ServiceItems from "./custom/serviceItems";
+import RecentProjects from "../../home/recentProjects";
+import ProjectItems from "./custom/projectsItems";
+import OurBrandRow from "../../home/ourBrandRow";
+import LinksRepeater from "./custom/linksRepeaterItems";
+import BlogSection from "../../home/blogSection";
+import BlogItems from "./custom/blogItems";
+import GetQuote from "../../home/getQuote";
+import MainBanner from "../../mainBanner";
 
 interface CreateNewContentProps {
   data?: string[];
@@ -44,6 +57,10 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
   const [selectedComponent, setSelectedComponent] = useState<Component | null>(null);
   const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
   const [shouldDelete, setShouldDelete] = useState<string>("");
+  
+  // Drag and drop states
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
   // Updated to handle ComponentPropValue types
   const handleUpdateComponent = (id: string, props: Record<string, ComponentPropValue>) => {
@@ -70,22 +87,81 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
     }
   };
 
+  // Drag and drop handlers
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', e.currentTarget.outerHTML);
+    (e.currentTarget as HTMLElement).style.opacity = '0.4';
+  };
+
+  const handleDragEnd = (e: React.DragEvent) => {
+    (e.currentTarget as HTMLElement).style.opacity = '1';
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    
+    if (draggedIndex !== null && draggedIndex !== index) {
+      setDragOverIndex(index);
+    }
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    // Only clear drag over index if we're leaving the component area
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX;
+    const y = e.clientY;
+    
+    if (x < rect.left || x >= rect.right || y < rect.top || y >= rect.bottom) {
+      setDragOverIndex(null);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    
+    if (draggedIndex === null || draggedIndex === dropIndex) {
+      setDragOverIndex(null);
+      return;
+    }
+
+    const newComponents = [...components];
+    const draggedComponent = newComponents[draggedIndex];
+    
+    // Remove the dragged component from its original position
+    newComponents.splice(draggedIndex, 1);
+    
+    // Insert the dragged component at the new position
+    // Adjust the drop index if we removed an item before it
+    const adjustedDropIndex = draggedIndex < dropIndex ? dropIndex - 1 : dropIndex;
+    newComponents.splice(adjustedDropIndex, 0, draggedComponent);
+    
+    setComponents(newComponents);
+    setDragOverIndex(null);
+  };
+
   const renderComponentPreview = (component: Component) => {
     switch (component.customName) {
       case "mainBanner":
-        return  <MainBanner propsData={component.props}/>;
+        return  <MainBanner {...component.props}/>;
       case "welcomeSection":
         return <WelcomeSection propsData={component.props} />;
-      case "whatWeOffer":
-        return <WhatWeDo propsData={component.props} />;
-      case "bookYourRide":
-        return <BookYourRide propsData={component.props} />;
-      case "chooseYourRide":
-        return <ChooseYourRide propsData={component.props} />;
-      case "testimonials":
-        return <TestimonialsPreview propsData={component.props} />;
-      case "callUsNow":
-        return <CallUsNowPreview propsData={component.props} />;
+      case "numberResults":
+        return <NumberResults {...component.props} />;
+      case "featuredServices":
+        return <FeaturedServices serviceItems={[]} {...component.props} />;
+      case "recentProjects":
+        return <RecentProjects projects={[]} isAdmin {...component.props} />;
+      case "ourBrandRow":
+        return <OurBrandRow linkCards={[]} isAdmin {...component.props} />;
+      case "blogSection":
+        return <BlogSection {...component.props}  />;
+      case "getQuote":
+        return <GetQuote {...component.props} isAdmin/>;
       default:
         return null;
     }
@@ -93,9 +169,9 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
 
   const renderPropInput = (
     key: string,
-    value: ComponentPropValue, // Use our defined union type
+    value: ComponentPropValue,
     propDef: ComponentProp | undefined,
-    onChange: (value: ComponentPropValue) => void // Use our defined union type
+    onChange: (value: ComponentPropValue) => void
   ) => {
 
     if (!propDef) {
@@ -115,6 +191,7 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
             id={key}
             value={typeof value === 'string' ? value : ''}
             onChange={(e) => onChange(e.target.value)}
+            rows={5}
           />
         );
       case 'select':
@@ -150,22 +227,65 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
             />
           </div>
         );
+      case 'email':
+        return (
+          <div className="w-full">
+            <Input
+              type="email"
+              id={key}
+              value={typeof value === 'string' ? value : ''}
+              className="w-full"
+              placeholder="Email Address"
+              onChange={(e) => onChange(e.target.value)}
+            />
+          </div>
+        );
       case 'groupTitle':
         return <h2 className="text-xl font-semibold capitalize">{propDef?.displayName}</h2>;
       case 'serviceRepeater':
         return <ServiceRepeater
           value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
-          onChange={(e) => onChange(e)} // Pass the array directly instead of stringifying
+          onChange={(e) => onChange(e)}
+        />;
+      case 'sliderItems':
+        return <SliderItems
+          value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
+          onChange={(e) => onChange(e)}
+        />;
+      case 'numberItems':
+        return <NumberItems
+          value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
+          onChange={(e) => onChange(e)}
+        />;
+      case 'serviceItems':
+        return <ServiceItems
+          value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
+          onChange={(e) => onChange(e)}
+        />;
+      case 'projectsRepeater':
+        return <ProjectItems
+          value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
+          onChange={(e) => onChange(e)}
+        />;
+      case 'linksRepeater':
+        return <LinksRepeater
+          value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
+          onChange={(e) => onChange(e)}
+        />;
+      case 'blogItems':
+        return <BlogItems
+          value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
+          onChange={(e) => onChange(e)}
         />;
       case 'testimonials':
         return <TestimonialsRepeater
           value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
-          onChange={(e) => onChange(e)} // Pass the array directly instead of stringifying
+          onChange={(e) => onChange(e)}
         />;
       case 'testimonialsRightRepeater':
         return <TestimonialsRightRepeater
           value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
-          onChange={(e) => onChange(e)} // Pass the array directly instead of stringifying
+          onChange={(e) => onChange(e)}
         />;
       case 'number':
         return (
@@ -221,34 +341,52 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
         {components.map((component, i) => (
           <Card
             key={component.id}
-            className="cursor-pointer hover:shadow-lg transition-shadow"
+            draggable
+            onDragStart={(e) => handleDragStart(e, i)}
+            onDragEnd={handleDragEnd}
+            onDragOver={(e) => handleDragOver(e, i)}
+            onDragLeave={handleDragLeave}
+            onDrop={(e) => handleDrop(e, i)}
+            className={`cursor-pointer hover:shadow-lg transition-all duration-200 ${
+              draggedIndex === i ? 'opacity-40 scale-105' : ''
+            } ${
+              dragOverIndex === i ? 'border-blue-500 border-2 bg-blue-50' : ''
+            }`}
           >
             <CardContent className="p-4">
               <div className="flex flex-col gap-3">
-                <div className="flex gap-2 items-center" >
+                <div className="flex gap-2 items-center">
                   <div className="grid place-items-center px-3 text-sx py-2 bg-slate-100 rounded-full border-[1px] w-[45px] h-[45px]">
                     {i + 1 < 9 ? `0${i + 1}` : i + 1}
                   </div>
-                  <h3 className="text-[20px] font-semibold">{component.type}</h3>
-                </div>
-                <div className="flex gap-4">
-                  <div className="w-full hover:bg-black/25 transition-all ease-in-out" onClick={() => {
-                    setSelectedComponent(component);
-                    setIsSheetOpen(true);
-                  }}>
-                    {renderComponentPreview(component)}
+                  <h3 className="text-[20px] font-semibold flex-1">{component.type}</h3>
+                  <div className="flex items-center gap-2">
+                    <GripVertical className="h-5 w-5 text-gray-400 cursor-grab active:cursor-grabbing" />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-red-500 hover:text-red-700 hover:bg-red-100"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowConfirmDelete(true);
+                        setShouldDelete(component.id);
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-red-500 hover:text-red-700 hover:bg-red-100"
-                    onClick={() => {
-                      setShowConfirmDelete(true);
-                      setShouldDelete(component.id)
-                    }}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                </div>
+                <div 
+                  className="w-full hover:bg-black/25 transition-all ease-in-out" 
+                  onClick={(e) => {
+                    // Prevent opening sheet when dragging
+                    if (draggedIndex === null) {
+                      setSelectedComponent(component);
+                      setIsSheetOpen(true);
+                    }
+                  }}
+                >
+                  {renderComponentPreview(component)}
                 </div>
               </div>
             </CardContent>
@@ -299,7 +437,7 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
                     {propDefinition?.type !== "groupTitle" && <Label htmlFor={key}>{propDefinition?.displayName}</Label>}
                     {renderPropInput(
                       key,
-                      value, // No longer need to stringify/parse here
+                      value,
                       propDefinition,
                       (newValue) => {
                         const newProps = {

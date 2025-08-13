@@ -40,27 +40,27 @@ const initData = {
       icon: LayoutDashboard,
       isActive: true,
     },
-    {
-      title: "Bookings",
-      url: "/admin/bookings",
-      icon: Calendar1,
-      isActive: true,
-    },
-    {
-      title: "Manage Routes",
-      url: "#",
-      icon: Route,
-      items: [
-        {
-          title: "Locations",
-          url: "/admin/manage-routes/locations",
-        },
-        {
-          title: "Fees",
-          url: "/admin/manage-routes/fees",
-        },
-      ],
-    },
+    // {
+    //   title: "Bookings",
+    //   url: "/admin/bookings",
+    //   icon: Calendar1,
+    //   isActive: true,
+    // },
+    // {
+    //   title: "Manage Routes",
+    //   url: "#",
+    //   icon: Route,
+    //   items: [
+    //     {
+    //       title: "Locations",
+    //       url: "/admin/manage-routes/locations",
+    //     },
+    //     {
+    //       title: "Fees",
+    //       url: "/admin/manage-routes/fees",
+    //     },
+    //   ],
+    // },
     {
       title: "Pages",
       url: "/admin/pages",
@@ -87,21 +87,21 @@ const initData = {
         },
       ],
     },
-    {
-      title: "Vehicles",
-      url: "#",
-      icon: Car,
-      items: [
-        {
-          title: "All Vehicles",
-          url: "/admin/vehicles",
-        },
-        {
-          title: "Add New Vehicle",
-          url: "/admin/vehicles/add-new-vehicle",
-        },
-      ],
-    },
+    // {
+    //   title: "Vehicles",
+    //   url: "#",
+    //   icon: Car,
+    //   items: [
+    //     {
+    //       title: "All Vehicles",
+    //       url: "/admin/vehicles",
+    //     },
+    //     {
+    //       title: "Add New Vehicle",
+    //       url: "/admin/vehicles/add-new-vehicle",
+    //     },
+    //   ],
+    // },
     {
       title: "Theme Settings",
       url: "/admin/theme-settings",

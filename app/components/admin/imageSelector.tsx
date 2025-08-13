@@ -6,6 +6,7 @@ import UploadImages from "./common/uploadImage";
 import Image from "next/image";
 
 interface ImageType {
+    path: any;
     url: string;
     alt: string;
 }
@@ -43,8 +44,17 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({
     }, []);
 
     const handlerSelectImage = (paths: ImageType[]) => {
+
+
+        const reOrganize = paths?.map((img) => {
+            return {
+                ...img,
+                url: img.path
+            }
+        });
+
         // Update all images with newly uploaded ones
-        setAllImages(prevImages => [...paths, ...prevImages]);
+        setAllImages(prevImages => [...reOrganize, ...prevImages]);
 
         // Update the selected value
         onChange(paths);

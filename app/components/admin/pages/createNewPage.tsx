@@ -142,7 +142,8 @@ const CreateNewPage: React.FC<CreateNewPageProps> = ({
             if (!response.ok) throw new Error('Failed to create page');
 
             toast.success("Successfully Created!", {
-                position: "top-center"
+                position: "top-center",
+                richColors: true,
             });
         } catch (error) {
             console.error('Error creating page:', error);

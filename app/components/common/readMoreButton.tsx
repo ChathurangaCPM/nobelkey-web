@@ -1,10 +1,20 @@
 import { ChevronRight } from "lucide-react"
-import Link from "next/link"
+import Link from "next/link";
 
-const ReadMoreButton:React.FC = () => {
+interface ReadMoreButtonProps {
+    url?: string;
+    title?: string;
+    className?: string;
+}
+
+const ReadMoreButton:React.FC<ReadMoreButtonProps> = ({
+    url,
+    title,
+    className
+}) => {
     return(
-        <Link href="#" className="flex w-max items-center border border-black/10 p-[5px] rounded-[30px] relative group overflow-hidden transition-all ease-in-out duration-300">
-            <span className="px-6 font-semibold capitalize text-sm transition-all z-20 relative ease-in-out duration-300 group-hover:text-white">Find out more</span>
+        <Link href={url || "#"} className={`flex w-max items-center border border-black/10 p-[5px] rounded-[30px] relative group overflow-hidden transition-all ease-in-out duration-300 ${className}`}>
+            <span className="px-6 font-semibold capitalize text-sm transition-all z-20 relative ease-in-out duration-300 group-hover:text-white">{title || "Find out more"}</span>
 
             <div className="w-[40px] h-[40px] rounded-full bg-[#3C51A3] grid place-content-center transition-all duration-300 ease-in-out group-hover:bg-white z-30">
                 <ChevronRight className="text-white transition-all ease-in-out duration-300 group-hover:text-[#3C51A3]"/>

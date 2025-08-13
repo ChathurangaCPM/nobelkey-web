@@ -112,7 +112,8 @@ const AddNewVehicle: React.FC<AddNewVehicleProps> = ({
 
 
             toast.success("Successfully Created!", {
-                position: "top-center"
+                position: "top-center",
+                richColors: true,
             });
 
             setIsLoading(false);
@@ -137,7 +138,6 @@ const AddNewVehicle: React.FC<AddNewVehicleProps> = ({
     useEffect(() => {
         if (data && Object.keys(data).length !== 0) {
             setIsEdit(true);
-
             setValue('vehicleName', data.vehicleName);
             setValue('image', data.image);
             setValue('backgroundImage', data.backgroundImage);
@@ -145,7 +145,6 @@ const AddNewVehicle: React.FC<AddNewVehicleProps> = ({
             setValue('perKmPrice', data.perKmPrice);
             setValue('maxPassenger', data.maxPassenger);
             setValue('activeMainCity', data.activeMainCity);
-
         }
     }, [data])
 

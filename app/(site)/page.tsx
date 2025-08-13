@@ -34,11 +34,6 @@ const componentMap = {
   featuredServices: FeaturedServices,
   recentProjects: RecentProjects,
   ourBrandRow: OurBrandRow,
-  whatWeOffer: WhatWeOffer,
-  bookYourRide: FareCalculator,
-  chooseYourRide: ChooseYourRide,
-  testimonials: CustomerReviews,
-  callUsNow: CallUsNow,
   getQuote: GetQuote,
   blogSection: BlogSection,
 } as const;
@@ -126,7 +121,7 @@ const Home: React.FC = async () => {
       return null;
     }
 
-    return <Component key={component.id} {...component.props} />;
+    return <Component serviceItems={[]} key={component.id} {...component.props} />;
   };
 
   if (!pageData?.components || pageData.components.length === 0) {

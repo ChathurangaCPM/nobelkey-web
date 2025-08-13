@@ -83,7 +83,8 @@ const ThemeSettingPage: React.FC = () => {
             }));
 
             toast.success("Updated!", {
-                position: 'top-center'
+                position: 'top-center',
+                richColors: true,
             });
         } catch (error) {
             console.error('Error:', error);

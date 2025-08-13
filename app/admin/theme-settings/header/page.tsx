@@ -124,7 +124,8 @@ export default function ThemeSettingHeaderPage() {
             }));
 
             toast.success("Updated!", {
-                position: 'top-center'
+                position: 'top-center',
+                richColors: true,
             });
         } catch (error) {
             console.error('Error:', error);
