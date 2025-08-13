@@ -2,20 +2,15 @@ import { Suspense } from "react";
 import { headers } from 'next/headers';
 import CreateNewPage from "@/app/components/admin/pages/createNewPage";
 
-function getBaseUrl() {
-    if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-    return process.env.NEXTAUTH_URL || 'http://localhost:1234';
-}
 
 async function getPageData(pageId: string) {
 
     try {
-        const baseUrl = getBaseUrl();
         const headersList = headers();
         const cookieHeader = headersList.get('cookie');
         
 
-        const response = await fetch(`${baseUrl}/api/admin/page?id=${pageId}`, {
+        const response = await fetch(`${process.env.NEXTAUTH_URL}/api/admin/page?id=${pageId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
