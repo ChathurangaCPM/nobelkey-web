@@ -58,7 +58,7 @@ export async function GET(req: NextRequest) {
 
         // Parallel database queries for better performance
         const [pages, theme] = await Promise.all([
-            Pages.find(filter).lean(),
+            Pages.find(filter).populate('parent', 'title slug').lean(),
             Theme.findOne({ userId: user.id }).select('selectedHomePage').lean()
         ]);
 
