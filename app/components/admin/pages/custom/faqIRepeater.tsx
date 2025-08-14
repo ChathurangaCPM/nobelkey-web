@@ -17,71 +17,60 @@ import ImageSelector from '../../imageSelector';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Image from 'next/image';
 
-interface BlogItemsProps {
-    onChange?: (blogRepeaterItems: BlogItems[]) => void;
-    value?: BlogItems[]
+interface FaqRepeaterProps {
+    onChange?: (faqRepeaterItems: FaqRepeater[]) => void;
+    value?: FaqRepeater[]
 }
 
 interface FormDataProps {
-    link?: string;
     title?: string;
     description?: string;
-    publishData?: string;
 }
 
-interface BlogItems {
+interface FaqRepeater {
     id: string;
-    link?: string;
     title?: string;
     description?: string;
-    publishData?: string;
 }
 
-const BlogItems: React.FC<BlogItemsProps> = ({
+const FaqRepeater: React.FC<FaqRepeaterProps> = ({
     onChange,
     value = []
 }) => {
-    const [blogRepeaterItems, setBlogItems] = useState<BlogItems[]>([]);
+    const [faqRepeaterItems, setFaqRepeater] = useState<FaqRepeater[]>([]);
     const [formData, setFormData] = useState<FormDataProps>({
-        link: '',
         title: '',
         description: '',
-        publishData: ''
     });
-    const [editingCard, setEditingCard] = useState<BlogItems | null>(null);
+    const [editingCard, setEditingCard] = useState<FaqRepeater | null>(null);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
-    // Initialize blogRepeaterItems with value prop when component mounts or value changes
+    // Initialize faqRepeaterItems with value prop when component mounts or value changes
     useEffect(() => {
         if (Array.isArray(value)) {
             // Ensure each item has an id
-            const blogRepeaterItemsWithIds = value.map(linksRowItems => ({
-                ...linksRowItems,
-                id: linksRowItems.id || Date.now().toString()
+            const faqRepeaterItemsWithIds = value.map(chooseRowItems => ({
+                ...chooseRowItems,
+                id: chooseRowItems.id || Date.now().toString()
             }));
-            setBlogItems(blogRepeaterItemsWithIds);
+            setFaqRepeater(faqRepeaterItemsWithIds);
         }
     }, [value]);
 
-    const handleAddBlogItems = () => {
-        if (blogRepeaterItems.length >= 3) {
-            return;
-        }
+    const handleAddFaqRepeater = () => {
 
-        const newProject: BlogItems = {
+        const newProject: FaqRepeater = {
             id: Date.now().toString(),
             ...formData
         };
 
-        const updatedBlogItems = [...blogRepeaterItems, newProject];
-        setBlogItems(updatedBlogItems);
-        onChange?.(updatedBlogItems);
+        const updatedFaqRepeater = [...faqRepeaterItems, newProject];
+        setFaqRepeater(updatedFaqRepeater);
+        onChange?.(updatedFaqRepeater);
         setFormData({
-            link: '',
             title: '',
             description: '',
-            publishData: ''
         });
         setIsAddDialogOpen(false);
     };
@@ -108,65 +97,61 @@ const BlogItems: React.FC<BlogItemsProps> = ({
         }
     };
 
-    const handleRemoveBlogItems = (id: string) => {
-        const updatedBlogItems = blogRepeaterItems.filter(linksRowItems => linksRowItems.id !== id);
-        setBlogItems(updatedBlogItems);
-        onChange?.(updatedBlogItems);
+    const handleRemoveFaqRepeater = (id: string) => {
+        const updatedFaqRepeater = faqRepeaterItems.filter(chooseRowItems => chooseRowItems.id !== id);
+        setFaqRepeater(updatedFaqRepeater);
+        onChange?.(updatedFaqRepeater);
     };
 
     const handleEditSubmit = () => {
         if (editingCard) {
-            const updatedBlogItems = blogRepeaterItems.map(linksRowItems =>
-                linksRowItems.id === editingCard.id ? editingCard : linksRowItems
+            const updatedFaqRepeater = faqRepeaterItems.map(chooseRowItems =>
+                chooseRowItems.id === editingCard.id ? editingCard : chooseRowItems
             );
-            setBlogItems(updatedBlogItems);
-            onChange?.(updatedBlogItems);
+            setFaqRepeater(updatedFaqRepeater);
+            onChange?.(updatedFaqRepeater);
             setEditingCard(null);
             setIsEditDialogOpen(false);
         }
     };
 
-    const startEditing = (linksRowItems: BlogItems) => {
-        setEditingCard(linksRowItems);
+    const startEditing = (chooseRowItems: FaqRepeater) => {
+        setEditingCard(chooseRowItems);
         setIsEditDialogOpen(true);
     };
 
     const resetAndCloseAddDialog = () => {
         setFormData({
-            link: '',
             title: '',
             description: '',
-            publishData: ''
         });
         setIsAddDialogOpen(false);
     };
 
     return (
         <div className="">
-            {/* Add New BlogItems Button */}
+            {/* Add New FaqRepeater Button */}
             <div className="mb-8 flex justify-between items-center">
                 <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                     <DialogTrigger asChild>
-                        {blogRepeaterItems && blogRepeaterItems?.length < 2 && <Button
+                        <Button
                             className="flex items-center gap-2"
-                            disabled={blogRepeaterItems.length >= 3}
                         >
                             <Plus className="h-5 w-5" />
-                            Add New Blog Items
-                        </Button>}
+                            Add New Row Items
+                        </Button>
                     </DialogTrigger>
                     <DialogContent className='p-0'>
                         <DialogHeader className='p-5'>
-                            <DialogTitle>Add New Link Item</DialogTitle>
+                            <DialogTitle>Add New Row Item</DialogTitle>
                         </DialogHeader>
                         <div className="space-y-4">
                             <div className="space-y-4 max-h-[60vh] overflow-y-auto px-5">
-
-
+                                
                                 <div className="space-y-2">
-                                    <Label htmlFor="add-title">Title</Label>
+                                    <Label htmlFor="add-faq-title">Title</Label>
                                     <Input
-                                        id="add-title"
+                                        id="add-faq-title"
                                         name="title"
                                         value={formData?.title || ''}
                                         onChange={handleInputChange}
@@ -174,33 +159,13 @@ const BlogItems: React.FC<BlogItemsProps> = ({
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="add-publishData">Publish Data</Label>
-                                    <Input
-                                        id="add-publishData"
-                                        name="publishData"
-                                        value={formData?.publishData || ''}
-                                        onChange={handleInputChange}
-                                        placeholder="Enter Publish Data Ex: Feb 10, 2025"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="add-description">Description</Label>
+                                    <Label htmlFor="add-faq-description">Description</Label>
                                     <Textarea
-                                        id="add-description"
+                                        id="add-faq-description"
                                         name="description"
                                         value={formData?.description || ''}
                                         onChange={handleInputChange}
-                                        placeholder="Enter description"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="add-link">Link</Label>
-                                    <Input
-                                        id="add-link"
-                                        name="link"
-                                        value={formData?.link || ''}
-                                        onChange={handleInputChange}
-                                        placeholder="Enter Link"
+                                        placeholder="Enter Description"
                                     />
                                 </div>
 
@@ -210,7 +175,7 @@ const BlogItems: React.FC<BlogItemsProps> = ({
                                 <Button variant="outline" onClick={resetAndCloseAddDialog}>
                                     Cancel
                                 </Button>
-                                <Button onClick={handleAddBlogItems}>
+                                <Button onClick={handleAddFaqRepeater}>
                                     Add Card
                                 </Button>
                             </div>
@@ -219,41 +184,44 @@ const BlogItems: React.FC<BlogItemsProps> = ({
                 </Dialog>
             </div>
 
-            <div className="gird grid-cols-1">
-
-                {blogRepeaterItems.map((linksRowItems, index) => (
-                    <div className="border-[1px] rounded-2xl overflow-hidden">
+            <div className="grid grid-cols-2 border-[1px] border-black/10 border-r-0 border-b-0">
+                {faqRepeaterItems.map((chooseRowItems, index) => (
+                    <div key={index} className="border-r-[1px] relative border-b-[1px] border-black/10 p-12 flex flex-col group gap-5 transition-all ease-in-out duration-150 hover:bg-[#3C51A3] hover:border-transparent hover:shadow-2xl hover:text-white">
                         <div
-                            key={linksRowItems.id}
-                            className="relative bg-white overflow-hidden hover:shadow-lg transition-shadow duration-300 p-6"
+                            key={chooseRowItems.id}
+                            className="absolute top-2 right-2 z-20 p-6"
                         >
                             <button
-                                onClick={() => handleRemoveBlogItems(linksRowItems.id)}
+                                onClick={() => handleRemoveFaqRepeater(chooseRowItems.id)}
                                 className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-110"
-                                title="Delete BlogItems"
+                                title="Delete FaqRepeater"
                             >
                                 <X className="h-4 w-4" />
                             </button>
                             <button
-                                onClick={() => startEditing(linksRowItems)}
+                                onClick={() => startEditing(chooseRowItems)}
                                 className="absolute top-2 right-12 p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-110"
-                                title="Edit BlogItems"
+                                title="Edit FaqRepeater"
                             >
                                 <Edit2 className="h-4 w-4" />
                             </button>
 
-                            <h2 className='font-semibold text-lg'>{linksRowItems?.title}</h2>
-                            <p className='text-sm'>{linksRowItems?.description}</p>
+
                         </div>
 
+                        <div className="w-full flex flex-col gap-5">
+                            <h4 className="font-bold">{chooseRowItems?.title}</h4>
 
+                            <p className="text-sm">{chooseRowItems?.description}</p>
+                        </div>
                     </div>
                 ))}
             </div>
 
-            {blogRepeaterItems.length === 0 && (
+
+            {faqRepeaterItems.length === 0 && (
                 <div className="text-center py-8 text-gray-500">
-                    No blog items added yet.
+                    No link Items added yet.
                 </div>
             )}
 
@@ -261,15 +229,14 @@ const BlogItems: React.FC<BlogItemsProps> = ({
             <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Edit Blog Items Card</DialogTitle>
+                        <DialogTitle>Edit Link Items Card</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
                         <div className="space-y-4 max-h-[60vh] overflow-y-auto px-0">
-
                             <div className="space-y-2">
-                                <Label htmlFor="add-title">Title</Label>
+                                <Label htmlFor="edit-faq-title">Title</Label>
                                 <Input
-                                    id="add-title"
+                                    id="edit-faq-title"
                                     name="title"
                                     value={editingCard?.title || ''}
                                     onChange={handleEditInputChange}
@@ -277,23 +244,13 @@ const BlogItems: React.FC<BlogItemsProps> = ({
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="add-description">Description</Label>
+                                <Label htmlFor="edit-faq-description">Description</Label>
                                 <Textarea
-                                    id="add-description"
+                                    id="edit-faq-description"
                                     name="description"
                                     value={editingCard?.description || ''}
                                     onChange={handleEditInputChange}
                                     placeholder="Enter Description"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="add-link">Link</Label>
-                                <Input
-                                    id="add-link"
-                                    name="link"
-                                    value={editingCard?.link || ''}
-                                    onChange={handleEditInputChange}
-                                    placeholder="Enter Title"
                                 />
                             </div>
                         </div>
@@ -314,4 +271,4 @@ const BlogItems: React.FC<BlogItemsProps> = ({
     );
 };
 
-export default BlogItems;
+export default FaqRepeater;

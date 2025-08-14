@@ -37,7 +37,7 @@ const InnerBanner: React.FC<InnerBannerProps> = ({
                     </Breadcrumb>
                 </div>
                 <div className="flex items-center justify-center gap-2 flex-col relative z-20">
-                    {mainTitle && <h1 className="font-extrabold text-[30px] leading-snug">{mainTitle}</h1>}
+                    {mainTitle && <h1 className="font-extrabold text-4xl leading-snug">{mainTitle}</h1>}
                     {subLine && <p>{subLine}</p>}
                 </div>
             </div>

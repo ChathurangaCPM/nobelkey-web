@@ -38,6 +38,12 @@ import GetQuote from "../../home/getQuote";
 import MainBanner from "../../mainBanner";
 import InnerBanner from "../../innerPages/innerBanner";
 import GeneralContent from "../../innerPages/generalContent";
+import ChooseNoblekey from "../../innerPages/chooseNoblekey";
+import ChooseItemsRepeater from "./custom/chooseItemsRepeater";
+import FaqSection from "../../innerPages/faqSection";
+import FaqRepeater from "./custom/faqIRepeater";
+import SolutionsCardSection from "../../innerPages/solutionsCardSection";
+import SolutionsRepeater from "./custom/solutionRepeater";
 
 interface CreateNewContentProps {
   data?: string[];
@@ -166,6 +172,12 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
         return <InnerBanner {...component.props} isAdmin/>;
       case "generalContent":
         return <GeneralContent {...component.props}/>;
+      case "chooseNobelkey":
+        return <ChooseNoblekey {...component.props}/>;
+      case "faqSection":
+        return <FaqSection {...component.props}/>;
+      case "solutionsCards":
+        return <SolutionsCardSection {...component.props} isAdmin/>;
       default:
         return null;
     }
@@ -273,6 +285,21 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
         />;
       case 'linksRepeater':
         return <LinksRepeater
+          value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
+          onChange={(e) => onChange(e)}
+        />;
+      case 'chooseItems':
+        return <ChooseItemsRepeater
+          value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
+          onChange={(e) => onChange(e)}
+        />;
+      case 'faqItems':
+        return <FaqRepeater
+          value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
+          onChange={(e) => onChange(e)}
+        />;
+      case 'solutionCardsRepeater':
+        return <SolutionsRepeater
           value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
           onChange={(e) => onChange(e)}
         />;

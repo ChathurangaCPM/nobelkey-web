@@ -37,6 +37,9 @@ export interface ComponentProp {
     "ourBrandRow" |
     "serviceRepeater" |
     "sliderItems" |
+    "chooseItems" |
+    "faqItems" |
+    "solutionCardsRepeater" |
     "projectsRepeater" |
     "linksRepeater" |
     "serviceItems" |
@@ -553,6 +556,75 @@ export const COMPONENT_TYPES: ComponentType[] = [
                 displayName: "Add a general content",
                 type: "textarea",
                 defaultValue: ""
+            },
+        ]
+    },
+    {
+        name: "Choose Nobelkey",
+        category: "basic",
+        customName: "chooseNobelkey",
+        defaultProps: {
+            mainTitle: "",
+            tagline: "",
+            chooseItems: []
+        },
+        propDefinitions: [
+            {
+                name: "mainTitle",
+                displayName: "Main Title",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "tagline",
+                displayName: "Tagline",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "chooseItems",
+                displayName: "Add a items",
+                type: "chooseItems",
+                defaultValue: []
+            },
+        ]
+    },
+    {
+        name: "FAQ",
+        category: "basic",
+        customName: "faqSection",
+        defaultProps: {
+            mainTitle: "",
+            faqItems: []
+        },
+        propDefinitions: [
+            {
+                name: "mainTitle",
+                displayName: "Main Title",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "faqItems",
+                displayName: "Add a items",
+                type: "faqItems",
+                defaultValue: []
+            },
+        ]
+    },
+    {
+        name: "Solution Cards",
+        category: "basic",
+        customName: "solutionsCards",
+        defaultProps: {
+            solutionCardsRepeater: []
+        },
+        propDefinitions: [
+            {
+                name: "solutionCardsRepeater",
+                displayName: "Add a Card",
+                type: "solutionCardsRepeater",
+                defaultValue: []
             },
         ]
     },

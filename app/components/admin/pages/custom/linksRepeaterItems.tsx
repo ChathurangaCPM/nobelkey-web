@@ -273,7 +273,7 @@ const LinksRepeater: React.FC<LinksRepeaterProps> = ({
                                     id="add-link"
                                     name="link"
                                     value={editingCard?.link || ''}
-                                    onChange={handleInputChange}
+                                    onChange={handleEditInputChange}
                                     placeholder="Enter Title"
                                 />
                             </div>

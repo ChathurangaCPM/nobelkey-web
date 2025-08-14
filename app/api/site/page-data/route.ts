@@ -12,6 +12,9 @@ export async function GET(req: NextRequest) {
         const searchParams = new URLSearchParams(url.searchParams);
         const slug = searchParams.get('slug');
 
+        console.log("slug==", slug);
+        
+
 
         // Fetch page data with explicit conditions and error handling
         const pageData = await Pages.find({

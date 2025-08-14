@@ -7,8 +7,11 @@ import NumberResults from "@/app/components/home/numberResults";
 import OurBrandRow from "@/app/components/home/ourBrandRow";
 import RecentProjects from "@/app/components/home/recentProjects";
 import WelcomeSection from "@/app/components/home/welcomeSection";
+import ChooseNoblekey from "@/app/components/innerPages/chooseNoblekey";
+import FaqSection from "@/app/components/innerPages/faqSection";
 import GeneralContent from "@/app/components/innerPages/generalContent";
 import InnerBanner from "@/app/components/innerPages/innerBanner";
+import SolutionsCardSection from "@/app/components/innerPages/solutionsCardSection";
 import MainBanner from "@/app/components/mainBanner";
 
 // Generic type for component props
@@ -37,6 +40,9 @@ const componentMap = {
     // inner pages related components
     innerBanner: InnerBanner,
     generalContent: GeneralContent,
+    chooseNobelkey: ChooseNoblekey,
+    faqSection: FaqSection,
+    solutionsCards: SolutionsCardSection,
 
 } as const;
 
@@ -56,7 +62,6 @@ function getBaseUrl() {
 }
 
 async function getPagesViewPageData(slug: string) {
-    
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/site/page-data?slug=${slug}`, {
             method: 'GET',
@@ -83,8 +88,9 @@ async function getPagesViewPageData(slug: string) {
 
 export async function generateMetadata({ params }: { params: { slug: string[] } }) {
     const baseUrl = getBaseUrl();
+    const getPageSlug = params?.slug[params?.slug.length - 1] 
     const ogImageUrl = `${baseUrl}/images/og-image.png`;
-    const getPageData = await getPagesViewPageData(params?.slug[0]);
+    const getPageData = await getPagesViewPageData(getPageSlug);
 
     return {
         title: getPageData?.seoData?.basicSeo?.title || '',
@@ -115,8 +121,14 @@ export async function generateMetadata({ params }: { params: { slug: string[] } 
 }
 
 const PagesView = async ({ params }: { params: { slug: string[] } }) => {
-    const getPageData = await getPagesViewPageData(params?.slug[0]);
+
+    const getPageSlug = params?.slug[params?.slug.length - 1].trim() 
+
+    const getPageData = await getPagesViewPageData(getPageSlug);
     const pageData = getPageData;
+
+    console.log("getPageSlug===", pageData);
+    
 
 
     const renderComponent = (component: PageComponent) => {

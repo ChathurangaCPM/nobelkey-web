@@ -88,7 +88,7 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({
                                 <TabsTrigger value="selectImage">Media</TabsTrigger>
                                 <TabsTrigger value="upload">Upload</TabsTrigger>
                             </TabsList>
-                            <TabsContent value="selectImage">
+                            <TabsContent value="selectImage" className="max-h-[40vh] overflow-y-auto">
                                 <div className="grid grid-cols-4 gap-4 p-4">
                                     {allImages && allImages?.map((image, index) => (
                                         <div

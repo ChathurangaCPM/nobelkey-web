@@ -344,7 +344,7 @@ const ProjectItems: React.FC<ProjectItemsProps> = ({
                                     id="add-title"
                                     name="title"
                                     value={editingCard?.title || ''}
-                                    onChange={handleInputChange}
+                                    onChange={handleEditInputChange}
                                     placeholder="Enter Title"
                                 />
                             </div>
@@ -355,7 +355,7 @@ const ProjectItems: React.FC<ProjectItemsProps> = ({
                                     id="add-location"
                                     name="location"
                                     value={editingCard?.location || ''}
-                                    onChange={handleInputChange}
+                                    onChange={handleEditInputChange}
                                     placeholder="Enter Location"
                                 />
                             </div>
@@ -366,7 +366,7 @@ const ProjectItems: React.FC<ProjectItemsProps> = ({
                                     id="add-description"
                                     name="description"
                                     value={editingCard?.description || ''}
-                                    onChange={handleInputChange}
+                                    onChange={handleEditInputChange}
                                     placeholder="Enter Description"
                                     rows={5}
                                 />
@@ -378,7 +378,7 @@ const ProjectItems: React.FC<ProjectItemsProps> = ({
                                     id="add-link"
                                     name="link"
                                     value={editingCard?.link || ''}
-                                    onChange={handleInputChange}
+                                    onChange={handleEditInputChange}
                                     placeholder="Enter Link"
                                 />
                             </div>
