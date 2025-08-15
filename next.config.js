@@ -37,9 +37,6 @@ module.exports = {
             }
         ],
     },
-    experimental: {
-        middleware: true,
-    },
     // reactStrictMode: true,
     // distDir: 'dist',
     // output: 'export'

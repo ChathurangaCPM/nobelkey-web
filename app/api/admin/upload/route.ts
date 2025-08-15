@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
         }
 
         const bytes = await file.arrayBuffer();
-        const originalBuffer = Buffer.from(bytes);
+        const originalBuffer = Buffer.from(bytes as ArrayBuffer);
         let processedBuffer = originalBuffer;
         let compressionRatio = '0%';
 
