@@ -22,7 +22,7 @@ const MAX_WIDTH = 1920;
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB for documents, 5MB for images
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB for images
 
-async function optimizeImage(buffer: Buffer): Promise<Buffer> {
+async function optimizeImage(buffer: any): Promise<Buffer> {
   const image = sharp(buffer);
   const metadata = await image.metadata();
   
@@ -108,7 +108,9 @@ export async function POST(req: NextRequest) {
         // Only optimize images
         if (fileCategory === 'images') {
           try {
-            processedBuffer = await optimizeImage(originalBuffer);
+            // Create a new buffer to ensure correct type
+            const imageBuffer = Buffer.from(originalBuffer);
+            processedBuffer = await optimizeImage(imageBuffer);
             compressionRatio = (
               (1 - processedBuffer.length / originalBuffer.length) * 100
             ).toFixed(1) + '%';
