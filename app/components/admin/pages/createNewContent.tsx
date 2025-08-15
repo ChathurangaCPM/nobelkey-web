@@ -15,6 +15,7 @@ import { Component, COMPONENT_TYPES, ComponentProp } from "@/lib/componentTypes"
 type ComponentPropValue = string | number | unknown[] | undefined;
 import ImageSelector from "../imageSelector";
 import { Textarea } from "@/components/ui/textarea";
+import RichTextEditor from "@/components/ui/rich-text-editor";
 import ServiceRepeater from "./custom/servicesRepeater";
 import WelcomeSection from "./preview/welcomeSection";
 import WhatWeDo from "./preview/whatWeDo";
@@ -39,6 +40,7 @@ import GetQuote from "../../home/getQuote";
 import MainBanner from "../../mainBanner";
 import InnerBanner from "../../innerPages/innerBanner";
 import GeneralContent from "../../innerPages/generalContent";
+import RichContent from "../../innerPages/richContent";
 import ChooseNoblekey from "../../innerPages/chooseNoblekey";
 import ChooseItemsRepeater from "./custom/chooseItemsRepeater";
 import FaqSection from "../../innerPages/faqSection";
@@ -59,6 +61,11 @@ import ProductItemRepeater from "./custom/itemContent";
 import OtherServices from "../../innerPages/otherServices";
 import ProjectListing from "../../innerPages/projectsListing";
 import ProjectsItemsRepeater from "./custom/projectCards";
+import ProjectSliderImagesRepeater from "./custom/projectSliderImagesRepeater";
+import ProjectOverview from "../../innerPages/projectOverview";
+import ProjectSlider from "../../innerPages/projectSlider";
+import ContactCard from "../../innerPages/contactCard";
+import ContactForm from "../../innerPages/contactForm";
 
 interface CreateNewContentProps {
   data?: string[];
@@ -187,6 +194,8 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
         return <InnerBanner {...component.props} isAdmin />;
       case "generalContent":
         return <GeneralContent {...component.props} />;
+      case "richContent":
+        return <RichContent {...component.props} isAdmin />;
       case "chooseNobelkey":
         return <ChooseNoblekey {...component.props} />;
       case "faqSection":
@@ -207,6 +216,14 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
         return <OtherServices {...component.props}/>;
       case "projects":
         return <ProjectListing {...component.props}/>;
+      case "projectOverview":
+        return <ProjectOverview {...component.props}/>;
+      case "projectSlider":
+        return <ProjectSlider {...component.props}/>;
+      case "contactCard":
+        return <ContactCard {...component.props}/>;
+      case "contactForm":
+        return <ContactForm {...component.props}/>;
       default:
         return null;
     }
@@ -237,6 +254,14 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
             value={typeof value === 'string' ? value : ''}
             onChange={(e) => onChange(e.target.value)}
             rows={5}
+          />
+        );
+      case 'richtext':
+        return (
+          <RichTextEditor
+            value={typeof value === 'string' ? value : ''}
+            onChange={(newValue) => onChange(newValue)}
+            placeholder={propDef?.displayName || 'Enter rich text content...'}
           />
         );
       case 'select':
@@ -369,6 +394,11 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
         />;
       case 'projectItems':
         return <ProjectsItemsRepeater
+          value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
+          onChange={(e) => onChange(e)}
+        />;
+      case 'projectSliderImages':
+        return <ProjectSliderImagesRepeater
           value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
           onChange={(e) => onChange(e)}
         />;

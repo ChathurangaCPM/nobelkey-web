@@ -22,6 +22,7 @@ const ProjectListing: React.FC<ProjectListingProps> = ({
 }) => {
 
     const rowItems: ProjectItemsProps[] = typeof projectItems === 'string' ? JSON.parse(projectItems) : (projectItems || []);
+    
     return (
         <div className="relative max-w-[1400px] mx-auto grid grid-cols-3 gap-4 mb-10">
             {rowItems && rowItems?.length > 0 && rowItems?.map((d, i) => (
@@ -37,7 +38,7 @@ const ProjectListing: React.FC<ProjectListingProps> = ({
                         <Image src={d?.imageUrl || 'https://dummyimage.com/600x350/ddd/fff'} className="w-full" width={600} height={350} alt={`project ${d?.title}`} />
                     </div>
                 </Link>
-            ))} 
+            ))}
         </div>
     )
 }

@@ -24,6 +24,7 @@ export interface ComponentProp {
     name: string;
     type: "text" |
     "textarea" |
+    "richtext" |
     "select" |
     "email" |
     "color" |
@@ -575,6 +576,29 @@ export const COMPONENT_TYPES: ComponentType[] = [
         ]
     },
     {
+        name: "Rich Content",
+        category: "basic",
+        customName: "richContent",
+        defaultProps: {
+            title: "",
+            content: "",
+        },
+        propDefinitions: [
+            {
+                name: "title",
+                displayName: "Title",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "content",
+                displayName: "Rich Text Content",
+                type: "richtext",
+                defaultValue: ""
+            },
+        ]
+    },
+    {
         name: "Choose Nobelkey",
         category: "basic",
         customName: "chooseNobelkey",
@@ -851,9 +875,98 @@ export const COMPONENT_TYPES: ComponentType[] = [
             {
                 name: "content",
                 displayName: "content",
+                type: "richtext",
+                defaultValue: ''
+            },
+        ]
+    },
+    {
+        name: "Project Slider",
+        category: "basic",
+        customName: "projectSlider",
+        defaultProps: {
+            title: '',
+            projects: [],
+        },
+
+        propDefinitions: [
+            {
+                name: "title",
+                displayName: "Title",
+                type: "text",
+                defaultValue: ''
+            },
+            {
+                name: "projects",
+                displayName: "Add project",
+                type: "projectsRepeater",
+                defaultValue: []
+            },
+
+        ]
+    },
+    {
+        name: "Contact Card",
+        category: "basic",
+        customName: "contactCard",
+        defaultProps: {
+            phone: '',
+            address: '',
+            email: '',
+        },
+
+        propDefinitions: [
+            {
+                name: "phone",
+                displayName: "Phone",
+                type: "text",
+                defaultValue: ''
+            },
+            {
+                name: "address",
+                displayName: "Address",
                 type: "textarea",
                 defaultValue: ''
             },
+            {
+                name: "email",
+                displayName: "Email Address",
+                type: "email",
+                defaultValue: ''
+            },
+
+        ]
+    },
+    {
+        name: "Contact Form",
+        category: "basic",
+        customName: "contactForm",
+        defaultProps: {
+            title: '',
+            tagline: '',
+            toEmail: '',
+        },
+
+        propDefinitions: [
+            {
+                name: "title",
+                displayName: "Title",
+                type: "text",
+                defaultValue: ''
+            },
+            {
+                name: "tagline",
+                displayName: "Tagline",
+                type: "text",
+                defaultValue: ''
+            },
+            {
+                name: "toEmail",
+                displayName: "Email Address",
+                type: "email",
+                defaultValue: ''
+            },
+
         ]
     },
     // {

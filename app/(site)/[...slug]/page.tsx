@@ -10,6 +10,7 @@ import WelcomeSection from "@/app/components/home/welcomeSection";
 import ChooseNoblekey from "@/app/components/innerPages/chooseNoblekey";
 import FaqSection from "@/app/components/innerPages/faqSection";
 import GeneralContent from "@/app/components/innerPages/generalContent";
+import RichContent from "@/app/components/innerPages/richContent";
 import GetAQuoteRow from "@/app/components/innerPages/getAQuoteRow";
 import ImageInformationCards from "@/app/components/innerPages/imageInformationCards";
 import InnerBanner from "@/app/components/innerPages/innerBanner";
@@ -20,6 +21,10 @@ import ProjectListing from "@/app/components/innerPages/projectsListing";
 import SingleSliderCardSection from "@/app/components/innerPages/singleSliderCard";
 import SolutionsCardSection from "@/app/components/innerPages/solutionsCardSection";
 import MainBanner from "@/app/components/mainBanner";
+import ProjectOverview from "@/app/components/innerPages/projectOverview";
+import ProjectSlider from "@/app/components/innerPages/projectSlider";
+import ContactCard from "@/app/components/innerPages/contactCard";
+import ContactForm from "@/app/components/innerPages/contactForm";
 
 // Generic type for component props
 type GenericProps = {
@@ -47,6 +52,7 @@ const componentMap = {
     // inner pages related components
     innerBanner: InnerBanner,
     generalContent: GeneralContent,
+    richContent: RichContent,
     chooseNobelkey: ChooseNoblekey,
     faqSection: FaqSection,
     solutionsCards: SolutionsCardSection,
@@ -57,6 +63,10 @@ const componentMap = {
     productDescription: ProductDescription,
     otherSolutions: OtherServices,
     projects: ProjectListing,
+    projectOverview: ProjectOverview,
+    projectSlider: ProjectSlider,
+    contactCard: ContactCard,
+    contactForm: ContactForm
 
 } as const;
 
