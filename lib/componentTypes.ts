@@ -24,6 +24,7 @@ export interface ComponentProp {
     name: string;
     type: "text" |
     "textarea" |
+    "richtext" |
     "select" |
     "email" |
     "color" |
@@ -41,7 +42,15 @@ export interface ComponentProp {
     "faqItems" |
     "solutionCardsRepeater" |
     "projectsRepeater" |
+    "singleSliderRepeater" |
+    "featuresBenefits" |
+    "basicInformation" |
+    "imageDetailedCards" |
+    "projectSliderImages" |
+    "itemContent" |
+    "documents" |
     "linksRepeater" |
+    "projectItems" |
     "serviceItems" |
     "blogItems" |
     "numberItems" |
@@ -548,13 +557,43 @@ export const COMPONENT_TYPES: ComponentType[] = [
         category: "basic",
         customName: "generalContent",
         defaultProps: {
+            title: "",
             content: "",
         },
         propDefinitions: [
             {
+                name: "title",
+                displayName: "Title",
+                type: "text",
+                defaultValue: ""
+            },
+            {
                 name: "content",
                 displayName: "Add a general content",
                 type: "textarea",
+                defaultValue: ""
+            },
+        ]
+    },
+    {
+        name: "Rich Content",
+        category: "basic",
+        customName: "richContent",
+        defaultProps: {
+            title: "",
+            content: "",
+        },
+        propDefinitions: [
+            {
+                name: "title",
+                displayName: "Title",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "content",
+                displayName: "Rich Text Content",
+                type: "richtext",
                 defaultValue: ""
             },
         ]
@@ -626,6 +665,308 @@ export const COMPONENT_TYPES: ComponentType[] = [
                 type: "solutionCardsRepeater",
                 defaultValue: []
             },
+        ]
+    },
+    {
+        name: "Single Slider",
+        category: "basic",
+        customName: "singleSlider",
+        defaultProps: {
+            singleSliderRepeater: []
+        },
+        propDefinitions: [
+            {
+                name: "singleSliderRepeater",
+                displayName: "Add a Slider Item",
+                type: "singleSliderRepeater",
+                defaultValue: []
+            },
+        ]
+    },
+    {
+        name: "Product Table",
+        category: "basic",
+        customName: "productTable",
+        defaultProps: {
+            featuresBenefits: [],
+            basicInformation: [],
+            documents: [],
+        },
+        propDefinitions: [
+            {
+                name: "featuresBenefits",
+                displayName: "Add a Features & Benefits",
+                type: "featuresBenefits",
+                defaultValue: []
+            },
+            {
+                name: "basicInformation",
+                displayName: "Add a Basic Information",
+                type: "basicInformation",
+                defaultValue: []
+            },
+            {
+                name: "documents",
+                displayName: "Add a documents",
+                type: "documents",
+                defaultValue: []
+            },
+        ]
+    },
+    {
+        name: "Get a Quote Row",
+        category: "basic",
+        customName: "getAQuoteRow",
+        defaultProps: {
+            title: '',
+            description: '',
+            link: '',
+            linkText: '',
+        },
+        propDefinitions: [
+            {
+                name: "title",
+                displayName: "Main Title",
+                type: "text",
+                defaultValue: ''
+            },
+            {
+                name: "description",
+                displayName: "Description",
+                type: "textarea",
+                defaultValue: ''
+            },
+            {
+                name: "link",
+                displayName: "URL",
+                type: "text",
+                defaultValue: ''
+            },
+            {
+                name: "linkText",
+                displayName: "Link Text",
+                type: "text",
+                defaultValue: ''
+            },
+        ]
+    },
+    {
+        name: "Image Information Cards",
+        category: "basic",
+        customName: "imageInformationCards",
+        defaultProps: {
+            imageUrl: '',
+            imageDetailedCards: []
+        },
+        propDefinitions: [
+            {
+                name: "imageUrl",
+                displayName: "Select Background ",
+                type: "image",
+                defaultValue: ''
+            },
+            {
+                name: "imageDetailedCards",
+                displayName: "Add card",
+                type: "imageDetailedCards",
+                defaultValue: []
+            },
+        ]
+    },
+    {
+        name: "Product Descriptions",
+        category: "basic",
+        customName: "productDescription",
+        defaultProps: {
+            mainTitle: '',
+            content: '',
+            itemContent: []
+        },
+        propDefinitions: [
+            {
+                name: "mainTitle",
+                displayName: "Main Title",
+                type: "text",
+                defaultValue: ''
+            },
+            {
+                name: "content",
+                displayName: "Content",
+                type: "textarea",
+                defaultValue: '',
+            },
+            {
+                name: "itemContent",
+                displayName: "Content Rows",
+                type: "itemContent",
+                defaultValue: '',
+            },
+        ]
+    },
+    {
+        name: "Other Solutions",
+        category: "basic",
+        customName: "otherSolutions",
+        defaultProps: {
+            mainTitle: "",
+            serviceItems: [],
+        },
+
+        propDefinitions: [
+            {
+                name: "mainTitle",
+                displayName: "Main title",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "description",
+                displayName: "Descriptions",
+                type: "textarea",
+                defaultValue: ""
+            },
+            {
+                name: "link",
+                displayName: "Link",
+                type: "text",
+                defaultValue: ""
+            },
+            {
+                name: "serviceItems",
+                displayName: "Servers",
+                type: "serviceItems",
+                defaultValue: []
+            },
+        ]
+    },
+    {
+        name: "Projects",
+        category: "basic",
+        customName: "projects",
+        defaultProps: {
+            projectItems: [],
+        },
+
+        propDefinitions: [
+            {
+                name: "projectItems",
+                displayName: "Add new project",
+                type: "projectItems",
+                defaultValue: []
+            },
+        ]
+    },
+    {
+        name: "Project Overview",
+        category: "basic",
+        customName: "projectOverview",
+        defaultProps: {
+            projectSliderImages: [],
+            content: '',
+        },
+
+        propDefinitions: [
+            {
+                name: "projectSliderImages",
+                displayName: "Add images",
+                type: "projectSliderImages",
+                defaultValue: []
+            },
+            {
+                name: "content",
+                displayName: "content",
+                type: "richtext",
+                defaultValue: ''
+            },
+        ]
+    },
+    {
+        name: "Project Slider",
+        category: "basic",
+        customName: "projectSlider",
+        defaultProps: {
+            title: '',
+            projects: [],
+        },
+
+        propDefinitions: [
+            {
+                name: "title",
+                displayName: "Title",
+                type: "text",
+                defaultValue: ''
+            },
+            {
+                name: "projects",
+                displayName: "Add project",
+                type: "projectsRepeater",
+                defaultValue: []
+            },
+
+        ]
+    },
+    {
+        name: "Contact Card",
+        category: "basic",
+        customName: "contactCard",
+        defaultProps: {
+            phone: '',
+            address: '',
+            email: '',
+        },
+
+        propDefinitions: [
+            {
+                name: "phone",
+                displayName: "Phone",
+                type: "text",
+                defaultValue: ''
+            },
+            {
+                name: "address",
+                displayName: "Address",
+                type: "textarea",
+                defaultValue: ''
+            },
+            {
+                name: "email",
+                displayName: "Email Address",
+                type: "email",
+                defaultValue: ''
+            },
+
+        ]
+    },
+    {
+        name: "Contact Form",
+        category: "basic",
+        customName: "contactForm",
+        defaultProps: {
+            title: '',
+            tagline: '',
+            toEmail: '',
+        },
+
+        propDefinitions: [
+            {
+                name: "title",
+                displayName: "Title",
+                type: "text",
+                defaultValue: ''
+            },
+            {
+                name: "tagline",
+                displayName: "Tagline",
+                type: "text",
+                defaultValue: ''
+            },
+            {
+                name: "toEmail",
+                displayName: "Email Address",
+                type: "email",
+                defaultValue: ''
+            },
+
         ]
     },
     // {

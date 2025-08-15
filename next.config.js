@@ -26,6 +26,14 @@ module.exports = {
             {
                 protocol: 'http',
                 hostname: 'localhost',
+            },
+            {
+                protocol: 'https',
+                hostname: '*.s3.*.amazonaws.com',
+            },
+            {
+                protocol: 'https',
+                hostname: 'datingappimages-bucket.s3.eu-north-1.amazonaws.com',
             }
         ],
     },

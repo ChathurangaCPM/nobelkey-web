@@ -12,10 +12,11 @@ interface ServicesItems {
 }
 
 interface FeaturedServicesProps {
-    mainTitle?: string,
-    description?: string,
-    link?: string,
-    serviceItems?: ServicesItems[],
+    mainTitle?: string;
+    description?: string;
+    link?: string;
+    serviceItems?: ServicesItems[];
+    innerPage?: ServicesItems[];
 }
 
 const FeaturedServices: React.FC<FeaturedServicesProps> = ({
@@ -23,16 +24,19 @@ const FeaturedServices: React.FC<FeaturedServicesProps> = ({
     description,
     link,
     serviceItems,
+    innerPage
 }) => {
 
     const rowItems: ServicesItems[] = typeof serviceItems === 'string' ? JSON.parse(serviceItems) : (serviceItems || []);
     return (
         <div className="relative">
-            <div className="w-full px-5 md:w-11/12 xl:px-0 xl:max-w-[1400px] mx-auto flex flex-col xl:flex-row items-start justify-between pb-20">
+            {innerPage ? <div className="text-center mb-3">
+                <h2 className="text-[22px] font-headingFontExtraBold leading-[32px] font-extrabold">Header title</h2>
+            </div> : <div className="w-full px-5 md:w-11/12 xl:px-0 xl:max-w-[1400px] mx-auto flex flex-col xl:flex-row items-start justify-between pb-20">
                 <div className="xl:w-[70%]">
                     <div className="relative pl-4 xl:max-w-[60%]">
                         <div className="w-[5px] h-[90%] bg-[#3C51A3] left-0 top-0 absolute" />
-                        <h1 className="text-[22px] xl:max-w-[70%] font-headingFontExtraBold leading-[32px] font-extrabold">{mainTitle || 'Section main title'}</h1>
+                        <h2 className="text-[22px] xl:max-w-[70%] font-headingFontExtraBold leading-[32px] font-extrabold">{mainTitle || 'Section main title'}</h2>
                     </div>
 
                 </div>
@@ -40,7 +44,9 @@ const FeaturedServices: React.FC<FeaturedServicesProps> = ({
                     <p className="font-medium">{description || "Header description will be here"}</p>
                     <ReadMoreButton url={link || "#"} />
                 </div>
-            </div>
+            </div>}
+
+            
 
             <div className="border-t-[1px] border-black/10 px-0 pt-5 xl:pt-0 md:w-11/12 xl:px-0 xl:max-w-[1400px] mx-auto">
                 <Carousel

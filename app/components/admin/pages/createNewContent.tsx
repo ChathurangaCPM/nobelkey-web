@@ -9,11 +9,13 @@ import { Label } from "@/components/ui/label";
 import { Trash2, GripVertical } from "lucide-react";
 import AddNewComponent from "./addNewComponent";
 import { Component, COMPONENT_TYPES, ComponentProp } from "@/lib/componentTypes";
+// Make sure to update ComponentProp type in "@/lib/componentTypes" to include "singleSliderRepeater"
 
 // Define the possible prop value types based on your component system
 type ComponentPropValue = string | number | unknown[] | undefined;
 import ImageSelector from "../imageSelector";
 import { Textarea } from "@/components/ui/textarea";
+import RichTextEditor from "@/components/ui/rich-text-editor";
 import ServiceRepeater from "./custom/servicesRepeater";
 import WelcomeSection from "./preview/welcomeSection";
 import WhatWeDo from "./preview/whatWeDo";
@@ -38,12 +40,32 @@ import GetQuote from "../../home/getQuote";
 import MainBanner from "../../mainBanner";
 import InnerBanner from "../../innerPages/innerBanner";
 import GeneralContent from "../../innerPages/generalContent";
+import RichContent from "../../innerPages/richContent";
 import ChooseNoblekey from "../../innerPages/chooseNoblekey";
 import ChooseItemsRepeater from "./custom/chooseItemsRepeater";
 import FaqSection from "../../innerPages/faqSection";
 import FaqRepeater from "./custom/faqIRepeater";
 import SolutionsCardSection from "../../innerPages/solutionsCardSection";
 import SolutionsRepeater from "./custom/solutionRepeater";
+import SingleSliderCardSection from "../../innerPages/singleSliderCard";
+import SingleSliderRepeater from "./custom/singleSliderRepeater";
+import ProductTable from "../../innerPages/productTable";
+import FeaturesBenefitsRepeater from "./custom/featuresBenefitsRepeater";
+import BasicInformationRepeater from "./custom/basicInformationRepeater";
+import DocumentsRepeater from "./custom/documentsRepeater";
+import GetAQuoteRow from "../../innerPages/getAQuoteRow";
+import ImageInformationCards from "../../innerPages/imageInformationCards";
+import ImageInformationCardRepeater from "./custom/imageDetailedCardRepeater";
+import ProductDescription from "../../innerPages/productDescription";
+import ProductItemRepeater from "./custom/itemContent";
+import OtherServices from "../../innerPages/otherServices";
+import ProjectListing from "../../innerPages/projectsListing";
+import ProjectsItemsRepeater from "./custom/projectCards";
+import ProjectSliderImagesRepeater from "./custom/projectSliderImagesRepeater";
+import ProjectOverview from "../../innerPages/projectOverview";
+import ProjectSlider from "../../innerPages/projectSlider";
+import ContactCard from "../../innerPages/contactCard";
+import ContactForm from "../../innerPages/contactForm";
 
 interface CreateNewContentProps {
   data?: string[];
@@ -62,7 +84,7 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
   const [selectedComponent, setSelectedComponent] = useState<Component | null>(null);
   const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
   const [shouldDelete, setShouldDelete] = useState<string>("");
-  
+
   // Drag and drop states
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
@@ -109,7 +131,7 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
   const handleDragOver = (e: React.DragEvent, index: number) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
-    
+
     if (draggedIndex !== null && draggedIndex !== index) {
       setDragOverIndex(index);
     }
@@ -120,7 +142,7 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX;
     const y = e.clientY;
-    
+
     if (x < rect.left || x >= rect.right || y < rect.top || y >= rect.bottom) {
       setDragOverIndex(null);
     }
@@ -128,7 +150,7 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
 
   const handleDrop = (e: React.DragEvent, dropIndex: number) => {
     e.preventDefault();
-    
+
     if (draggedIndex === null || draggedIndex === dropIndex) {
       setDragOverIndex(null);
       return;
@@ -136,15 +158,15 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
 
     const newComponents = [...components];
     const draggedComponent = newComponents[draggedIndex];
-    
+
     // Remove the dragged component from its original position
     newComponents.splice(draggedIndex, 1);
-    
+
     // Insert the dragged component at the new position
     // Adjust the drop index if we removed an item before it
     const adjustedDropIndex = draggedIndex < dropIndex ? dropIndex - 1 : dropIndex;
     newComponents.splice(adjustedDropIndex, 0, draggedComponent);
-    
+
     setComponents(newComponents);
     setDragOverIndex(null);
   };
@@ -152,7 +174,7 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
   const renderComponentPreview = (component: Component) => {
     switch (component.customName) {
       case "mainBanner":
-        return  <MainBanner {...component.props}/>;
+        return <MainBanner {...component.props} />;
       case "welcomeSection":
         return <WelcomeSection propsData={component.props} />;
       case "numberResults":
@@ -164,20 +186,44 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
       case "ourBrandRow":
         return <OurBrandRow linkCards={[]} isAdmin {...component.props} />;
       case "blogSection":
-        return <BlogSection {...component.props}  />;
+        return <BlogSection {...component.props} />;
       case "getQuote":
-        return <GetQuote {...component.props} isAdmin/>;
+        return <GetQuote {...component.props} isAdmin />;
       // inner page components
       case "innerBanner":
-        return <InnerBanner {...component.props} isAdmin/>;
+        return <InnerBanner {...component.props} isAdmin />;
       case "generalContent":
-        return <GeneralContent {...component.props}/>;
+        return <GeneralContent {...component.props} />;
+      case "richContent":
+        return <RichContent {...component.props} isAdmin />;
       case "chooseNobelkey":
-        return <ChooseNoblekey {...component.props}/>;
+        return <ChooseNoblekey {...component.props} />;
       case "faqSection":
-        return <FaqSection {...component.props}/>;
+        return <FaqSection {...component.props} />;
       case "solutionsCards":
-        return <SolutionsCardSection {...component.props} isAdmin/>;
+        return <SolutionsCardSection {...component.props} isAdmin />;
+      case "singleSlider":
+        return <SingleSliderCardSection {...component.props} isAdmin />;
+      case "productTable":
+        return <ProductTable {...component.props} isAdmin />;
+      case "getAQuoteRow":
+        return <GetAQuoteRow {...component.props} isAdmin />;
+      case "imageInformationCards":
+        return <ImageInformationCards {...component.props} />;
+      case "productDescription":
+        return <ProductDescription {...component.props} />;
+      case "otherSolutions":
+        return <OtherServices {...component.props}/>;
+      case "projects":
+        return <ProjectListing {...component.props}/>;
+      case "projectOverview":
+        return <ProjectOverview {...component.props}/>;
+      case "projectSlider":
+        return <ProjectSlider {...component.props}/>;
+      case "contactCard":
+        return <ContactCard {...component.props}/>;
+      case "contactForm":
+        return <ContactForm {...component.props}/>;
       default:
         return null;
     }
@@ -208,6 +254,14 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
             value={typeof value === 'string' ? value : ''}
             onChange={(e) => onChange(e.target.value)}
             rows={5}
+          />
+        );
+      case 'richtext':
+        return (
+          <RichTextEditor
+            value={typeof value === 'string' ? value : ''}
+            onChange={(newValue) => onChange(newValue)}
+            placeholder={propDef?.displayName || 'Enter rich text content...'}
           />
         );
       case 'select':
@@ -303,8 +357,48 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
           value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
           onChange={(e) => onChange(e)}
         />;
+      case 'singleSliderRepeater':
+        return <SingleSliderRepeater
+          value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
+          onChange={(e) => onChange(e)}
+        />;
+      case 'featuresBenefits':
+        return <FeaturesBenefitsRepeater
+          value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
+          onChange={(e) => onChange(e)}
+        />;
+      case 'basicInformation':
+        return <BasicInformationRepeater
+          value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
+          onChange={(e) => onChange(e)}
+        />;
+      case 'documents':
+        return <DocumentsRepeater
+          value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
+          onChange={(e) => onChange(e)}
+        />;
+      case 'imageDetailedCards':
+        return <ImageInformationCardRepeater
+          value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
+          onChange={(e) => onChange(e)}
+        />;
       case 'blogItems':
         return <BlogItems
+          value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
+          onChange={(e) => onChange(e)}
+        />;
+      case 'itemContent':
+        return <ProductItemRepeater
+          value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
+          onChange={(e) => onChange(e)}
+        />;
+      case 'projectItems':
+        return <ProjectsItemsRepeater
+          value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
+          onChange={(e) => onChange(e)}
+        />;
+      case 'projectSliderImages':
+        return <ProjectSliderImagesRepeater
           value={Array.isArray(value) ? value : (typeof value === 'string' ? JSON.parse(value || '[]') : [])}
           onChange={(e) => onChange(e)}
         />;
@@ -378,11 +472,9 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
             onDragOver={(e) => handleDragOver(e, i)}
             onDragLeave={handleDragLeave}
             onDrop={(e) => handleDrop(e, i)}
-            className={`cursor-pointer hover:shadow-lg transition-all duration-200 ${
-              draggedIndex === i ? 'opacity-40 scale-105' : ''
-            } ${
-              dragOverIndex === i ? 'border-blue-500 border-2 bg-blue-50' : ''
-            }`}
+            className={`cursor-pointer hover:shadow-lg transition-all duration-200 ${draggedIndex === i ? 'opacity-40 scale-105' : ''
+              } ${dragOverIndex === i ? 'border-blue-500 border-2 bg-blue-50' : ''
+              }`}
           >
             <CardContent className="p-4">
               <div className="flex flex-col gap-3">
@@ -407,8 +499,8 @@ const CreateNewContent: React.FC<CreateNewContentProps> = ({ onChange, editData 
                     </Button>
                   </div>
                 </div>
-                <div 
-                  className="w-full hover:bg-black/25 transition-all ease-in-out" 
+                <div
+                  className="w-full hover:bg-black/25 transition-all ease-in-out"
                   onClick={(e) => {
                     // Prevent opening sheet when dragging
                     if (draggedIndex === null) {

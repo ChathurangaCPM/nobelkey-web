@@ -9,6 +9,14 @@ export interface IMediaLibrary extends Document {
   alt?: string;
   description?: string;
   url: string;
+  s3Key?: string; // S3 object key for deletion
+  s3Bucket?: string; // S3 bucket name
+  fileSize?: number; // File size in bytes
+  originalSize?: number; // Original file size before optimization
+  optimizedSize?: number; // Optimized file size after processing
+  compressionRatio?: string; // Compression ratio percentage
+  fileCategory?: 'images' | 'documents'; // File category
+  mimeType?: string; // MIME type of the file
   access?: any[]; // You can make this more specific based on your needs
   createdAt: Date;
   updatedAt: Date;
@@ -36,6 +44,31 @@ const MediaLibrarySchema = new Schema<IMediaLibrary>({
   url: {
     type: String,
     required: true,
+  },
+  s3Key: {
+    type: String,
+  },
+  s3Bucket: {
+    type: String,
+  },
+  fileSize: {
+    type: Number,
+  },
+  originalSize: {
+    type: Number,
+  },
+  optimizedSize: {
+    type: Number,
+  },
+  compressionRatio: {
+    type: String,
+  },
+  fileCategory: {
+    type: String,
+    enum: ['images', 'documents'],
+  },
+  mimeType: {
+    type: String,
   },
   access: {
     type: [Schema.Types.Mixed], // You can make this more specific based on your needs

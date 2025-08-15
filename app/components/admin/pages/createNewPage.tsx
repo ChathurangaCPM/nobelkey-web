@@ -5,10 +5,12 @@ import CreateNewContent from "@/app/components/admin/pages/createNewContent";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Component } from "@/lib/componentTypes";
 import { LoaderCircle } from "lucide-react";
 import { ChangeEvent, useState, useEffect } from "react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface CreateNewPageProps {
     data?: {
@@ -17,7 +19,14 @@ interface CreateNewPageProps {
         slug?: string;
         components?: Component[];
         seoData?: SeoDataType;
+        parent?: string | { _id: string; title: string; slug: string };
     };
+}
+
+interface PageOption {
+    _id: string;
+    title: string;
+    slug: string;
 }
 
 // Define a type for SEO data
@@ -41,6 +50,7 @@ interface OgSeoData {
 const CreateNewPage: React.FC<CreateNewPageProps> = ({
     data
 }) => {
+    const router = useRouter();
     const [title, setTitle] = useState<string>('');
     const [slug, setSlug] = useState<string>('');
     const [componentData, setComponentData] = useState<Component[]>([]);
@@ -49,16 +59,43 @@ const CreateNewPage: React.FC<CreateNewPageProps> = ({
     const [slugExists, setSlugExists] = useState<boolean>(false);
     const [slugChecked, setSlugChecked] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [parentPage, setParentPage] = useState<string>('');
+    const [availablePages, setAvailablePages] = useState<PageOption[]>([]);
+    const [isLoadingPages, setIsLoadingPages] = useState<boolean>(false);
     const isEdit = Boolean(data && Object.keys(data).length !== 0);
 
+    // Fetch available pages for parent selection
+    useEffect(() => {
+        const fetchPages = async () => {
+            setIsLoadingPages(true);
+            try {
+                const response = await fetch('/api/admin/page?delete=false');
+                const result = await response.json();
+                if (result.success) {
+                    // Filter out current page if editing
+                    const filteredPages = result.data.filter((page: PageOption) => 
+                        isEdit ? page._id !== data?._id : true
+                    );
+                    setAvailablePages(filteredPages);
+                }
+            } catch (error) {
+                console.error('Error fetching pages:', error);
+            } finally {
+                setIsLoadingPages(false);
+            }
+        };
+
+        fetchPages();
+    }, [isEdit, data?._id]);
+
+    // Update slug when title changes (always keep it as base slug)
     useEffect(() => {
         if (title) {
-            const generatedSlug = title
+            const baseSlug = title
                 .toLowerCase()
                 .replace(/[^a-z0-9]+/g, '-')
                 .replace(/(^-|-$)/g, '');
-            setSlug(generatedSlug);
-            // Don't set slugChecked to false when initializing from title
+            setSlug(baseSlug);
         }
     }, [title]);
 
@@ -72,7 +109,8 @@ const CreateNewPage: React.FC<CreateNewPageProps> = ({
             setIsCheckingSlug(true);
             setSlugChecked(false); // Set to false while checking
             try {
-                const response = await fetch(`/api/admin/page/check-slug?slug=${slug}`);
+                const url = `/api/admin/page/check-slug?slug=${slug}${isEdit && data?._id ? `&excludeId=${data._id}` : ''}`;
+                const response = await fetch(url);
                 const responseData = await response.json();
                 setSlugExists(responseData.exists || false);
                 setSlugChecked(true); // Set to true after check completes
@@ -126,6 +164,7 @@ const CreateNewPage: React.FC<CreateNewPageProps> = ({
             components: componentData,
             seoData,
             type: "page" as const,
+            parent: (parentPage && parentPage !== 'none') ? parentPage : null,
             ...(isEdit && data?._id ? { id: data._id } : {})
         };
 
@@ -141,10 +180,17 @@ const CreateNewPage: React.FC<CreateNewPageProps> = ({
 
             if (!response.ok) throw new Error('Failed to create page');
 
-            toast.success("Successfully Created!", {
+            toast.success(`Successfully ${isEdit ? 'Updated' : 'Created'}!`, {
                 position: "top-center",
                 richColors: true,
             });
+
+            // Redirect to pages listing after successful creation/update
+            setTimeout(() => {
+                router.push('/admin/pages');
+                router.refresh(); // This will refresh the page data
+            }, 1000); // Small delay to show the success toast
+
         } catch (error) {
             console.error('Error creating page:', error);
             alert('Failed to create page. Please try again.');
@@ -163,6 +209,11 @@ const CreateNewPage: React.FC<CreateNewPageProps> = ({
             setSlug(data?.slug || '');
             setComponentData(data?.components || []);
             setSeoData(data?.seoData  || {});
+            // Handle parent field - it could be a string ID or populated object
+            const parentId = typeof data?.parent === 'object' && data?.parent?._id 
+                ? data.parent._id 
+                : (data?.parent as string) || 'none';
+            setParentPage(parentId);
             setSlugChecked(true); // Initialize as checked for existing pages
         }
     }, [data]);
@@ -179,6 +230,23 @@ const CreateNewPage: React.FC<CreateNewPageProps> = ({
                         value={title}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
                     />
+
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Parent Page (Optional)</label>
+                        <Select value={parentPage} onValueChange={setParentPage}>
+                            <SelectTrigger>
+                                <SelectValue placeholder={isLoadingPages ? "Loading pages..." : "Select parent page"} />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="none">No Parent (Root Page)</SelectItem>
+                                {availablePages.map((page) => (
+                                    <SelectItem key={page._id} value={page._id}>
+                                        {page.title} ({page.slug})
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
                     
                     <div className="space-y-2">
                         <Input 
@@ -190,7 +258,15 @@ const CreateNewPage: React.FC<CreateNewPageProps> = ({
                         />
                         <div className="text-xs">
                             <span className="text-muted-foreground">
-                                https://www.site.lk/<b>{slug}</b>
+                                https://www.site.lk/<b>{(() => {
+                                    if (parentPage && parentPage !== 'none') {
+                                        const selectedParent = availablePages.find(page => page._id === parentPage);
+                                        if (selectedParent) {
+                                            return `${selectedParent.slug}/${slug}`;
+                                        }
+                                    }
+                                    return slug;
+                                })()}</b>
                             </span>
                         </div>
                         
