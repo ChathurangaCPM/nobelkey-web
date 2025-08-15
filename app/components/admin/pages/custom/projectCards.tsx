@@ -17,71 +17,75 @@ import ImageSelector from '../../imageSelector';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Image from 'next/image';
 
-interface BlogItemsProps {
-    onChange?: (blogRepeaterItems: BlogItems[]) => void;
-    value?: BlogItems[]
+interface ProjectsItemsRepeaterProps {
+    onChange?: (productRepeaterItems: ProjectsItemsRepeater[]) => void;
+    value?: ProjectsItemsRepeater[]
 }
 
 interface FormDataProps {
-    link?: string;
     title?: string;
     description?: string;
-    publishData?: string;
+    location?: string;
+    link?: string;
+    imageUrl?: string;
 }
 
-interface BlogItems {
+interface ProjectsItemsRepeater {
     id: string;
-    link?: string;
     title?: string;
     description?: string;
-    publishData?: string;
+    location?: string;
+    link?: string;
+    imageUrl?: string;
 }
 
-const BlogItems: React.FC<BlogItemsProps> = ({
+const ProjectsItemsRepeater: React.FC<ProjectsItemsRepeaterProps> = ({
     onChange,
     value = []
 }) => {
-    const [blogRepeaterItems, setBlogItems] = useState<BlogItems[]>([]);
+    const [productRepeaterItems, setProjectsItemsRepeater] = useState<ProjectsItemsRepeater[]>([]);
     const [formData, setFormData] = useState<FormDataProps>({
-        link: '',
         title: '',
         description: '',
-        publishData: ''
+        location: '',
+        link: '',
+        imageUrl: ''
     });
-    const [editingCard, setEditingCard] = useState<BlogItems | null>(null);
+    const [editingCard, setEditingCard] = useState<ProjectsItemsRepeater | null>(null);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
-    // Initialize blogRepeaterItems with value prop when component mounts or value changes
+    // Initialize productRepeaterItems with value prop when component mounts or value changes
     useEffect(() => {
         if (Array.isArray(value)) {
             // Ensure each item has an id
-            const blogRepeaterItemsWithIds = value.map(linksRowItems => ({
-                ...linksRowItems,
-                id: linksRowItems.id || Date.now().toString()
+            const productRepeaterItemsWithIds = value.map(productRowItems => ({
+                ...productRowItems,
+                id: productRowItems.id || Date.now().toString()
             }));
-            setBlogItems(blogRepeaterItemsWithIds);
+            setProjectsItemsRepeater(productRepeaterItemsWithIds);
         }
     }, [value]);
 
-    const handleAddBlogItems = () => {
-        if (blogRepeaterItems.length >= 3) {
+    const handleAddProjectsItemsRepeater = () => {
+        if (productRepeaterItems.length >= 3) {
             return;
         }
 
-        const newProject: BlogItems = {
+        const newProject: ProjectsItemsRepeater = {
             id: Date.now().toString(),
             ...formData
         };
 
-        const updatedBlogItems = [...blogRepeaterItems, newProject];
-        setBlogItems(updatedBlogItems);
-        onChange?.(updatedBlogItems);
+        const updatedProjectsItemsRepeater = [...productRepeaterItems, newProject];
+        setProjectsItemsRepeater(updatedProjectsItemsRepeater);
+        onChange?.(updatedProjectsItemsRepeater);
         setFormData({
-            link: '',
             title: '',
             description: '',
-            publishData: ''
+            location: '',
+            link: '',
+            imageUrl: ''
         });
         setIsAddDialogOpen(false);
     };
@@ -108,51 +112,51 @@ const BlogItems: React.FC<BlogItemsProps> = ({
         }
     };
 
-    const handleRemoveBlogItems = (id: string) => {
-        const updatedBlogItems = blogRepeaterItems.filter(linksRowItems => linksRowItems.id !== id);
-        setBlogItems(updatedBlogItems);
-        onChange?.(updatedBlogItems);
+    const handleRemoveProjectsItemsRepeater = (id: string) => {
+        const updatedProjectsItemsRepeater = productRepeaterItems.filter(productRowItems => productRowItems.id !== id);
+        setProjectsItemsRepeater(updatedProjectsItemsRepeater);
+        onChange?.(updatedProjectsItemsRepeater);
     };
 
     const handleEditSubmit = () => {
         if (editingCard) {
-            const updatedBlogItems = blogRepeaterItems.map(linksRowItems =>
-                linksRowItems.id === editingCard.id ? editingCard : linksRowItems
+            const updatedProjectsItemsRepeater = productRepeaterItems.map(productRowItems =>
+                productRowItems.id === editingCard.id ? editingCard : productRowItems
             );
-            setBlogItems(updatedBlogItems);
-            onChange?.(updatedBlogItems);
+            setProjectsItemsRepeater(updatedProjectsItemsRepeater);
+            onChange?.(updatedProjectsItemsRepeater);
             setEditingCard(null);
             setIsEditDialogOpen(false);
         }
     };
 
-    const startEditing = (linksRowItems: BlogItems) => {
-        setEditingCard(linksRowItems);
+    const startEditing = (productRowItems: ProjectsItemsRepeater) => {
+        setEditingCard(productRowItems);
         setIsEditDialogOpen(true);
     };
 
     const resetAndCloseAddDialog = () => {
         setFormData({
-            link: '',
             title: '',
             description: '',
-            publishData: ''
+            location: '',
+            link: '',
+            imageUrl: ''
         });
         setIsAddDialogOpen(false);
     };
 
     return (
         <div className="">
-            {/* Add New BlogItems Button */}
+            {/* Add New ProjectsItemsRepeater Button */}
             <div className="mb-8 flex justify-between items-center">
                 <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                     <DialogTrigger asChild>
                         <Button
                             className="flex items-center gap-2"
-                            disabled={blogRepeaterItems.length >= 3}
                         >
                             <Plus className="h-5 w-5" />
-                            Add New Blog Items
+                            Add New Items
                         </Button>
                     </DialogTrigger>
                     <DialogContent className='p-0'>
@@ -173,16 +177,7 @@ const BlogItems: React.FC<BlogItemsProps> = ({
                                         placeholder="Enter Title"
                                     />
                                 </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="add-publishData">Publish Data</Label>
-                                    <Input
-                                        id="add-publishData"
-                                        name="publishData"
-                                        value={formData?.publishData || ''}
-                                        onChange={handleInputChange}
-                                        placeholder="Enter Publish Data Ex: Feb 10, 2025"
-                                    />
-                                </div>
+
                                 <div className="space-y-2">
                                     <Label htmlFor="add-description">Description</Label>
                                     <Textarea
@@ -194,13 +189,42 @@ const BlogItems: React.FC<BlogItemsProps> = ({
                                     />
                                 </div>
                                 <div className="space-y-2">
+                                    <Label htmlFor="add-location">Location</Label>
+                                    <Input
+                                        id="add-location"
+                                        name="location"
+                                        value={formData?.location || ''}
+                                        onChange={handleInputChange}
+                                        placeholder="Enter location"
+                                    />
+                                </div>
+                                <div className="space-y-2">
                                     <Label htmlFor="add-link">Link</Label>
                                     <Input
                                         id="add-link"
                                         name="link"
                                         value={formData?.link || ''}
                                         onChange={handleInputChange}
-                                        placeholder="Enter Link"
+                                        placeholder="Enter link"
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="add-image">Image Upload</Label>
+                                    <ImageSelector
+                                        value={formData?.imageUrl || ''}
+                                        onChange={(file) => {
+                                            if (file) {
+                                                setFormData(prev => ({
+                                                    ...prev,
+                                                    imageUrl: file[0]?.url
+                                                }));
+                                            }
+                                        }}
+                                        removeImage={() => setFormData(prev => ({
+                                            ...prev,
+                                            imageUrl: ""
+                                        }))}
                                     />
                                 </div>
 
@@ -210,7 +234,7 @@ const BlogItems: React.FC<BlogItemsProps> = ({
                                 <Button variant="outline" onClick={resetAndCloseAddDialog}>
                                     Cancel
                                 </Button>
-                                <Button onClick={handleAddBlogItems}>
+                                <Button onClick={handleAddProjectsItemsRepeater}>
                                     Add Card
                                 </Button>
                             </div>
@@ -219,31 +243,31 @@ const BlogItems: React.FC<BlogItemsProps> = ({
                 </Dialog>
             </div>
 
-            <div className="gird grid-cols-1">
+            <div className="flex flex-col gap-3">
 
-                {blogRepeaterItems.map((linksRowItems, index) => (
+                {productRepeaterItems.map((productRowItems, index) => (
                     <div className="border-[1px] rounded-2xl overflow-hidden">
                         <div
-                            key={linksRowItems.id}
+                            key={productRowItems.id}
                             className="relative bg-white overflow-hidden hover:shadow-lg transition-shadow duration-300 p-6"
                         >
                             <button
-                                onClick={() => handleRemoveBlogItems(linksRowItems.id)}
+                                onClick={() => handleRemoveProjectsItemsRepeater(productRowItems.id)}
                                 className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-110"
-                                title="Delete BlogItems"
+                                title="Delete ProjectsItemsRepeater"
                             >
                                 <X className="h-4 w-4" />
                             </button>
                             <button
-                                onClick={() => startEditing(linksRowItems)}
+                                onClick={() => startEditing(productRowItems)}
                                 className="absolute top-2 right-12 p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-110"
-                                title="Edit BlogItems"
+                                title="Edit ProjectsItemsRepeater"
                             >
                                 <Edit2 className="h-4 w-4" />
                             </button>
 
-                            <h2 className='font-semibold text-lg'>{linksRowItems?.title}</h2>
-                            <p className='text-sm'>{linksRowItems?.description}</p>
+                            <h2 className='font-semibold text-lg'>{productRowItems?.title}</h2>
+                            <p className='text-sm'>{productRowItems?.description}</p>
                         </div>
 
 
@@ -251,9 +275,9 @@ const BlogItems: React.FC<BlogItemsProps> = ({
                 ))}
             </div>
 
-            {blogRepeaterItems.length === 0 && (
+            {productRepeaterItems.length === 0 && (
                 <div className="text-center py-8 text-gray-500">
-                    No blog items added yet.
+                    No items added yet.
                 </div>
             )}
 
@@ -261,7 +285,7 @@ const BlogItems: React.FC<BlogItemsProps> = ({
             <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Edit Blog Items Card</DialogTitle>
+                        <DialogTitle>Edit Items Card</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
                         <div className="space-y-4 max-h-[60vh] overflow-y-auto px-0">
@@ -287,25 +311,45 @@ const BlogItems: React.FC<BlogItemsProps> = ({
                                 />
                             </div>
                             <div className="space-y-2">
+                                <Label htmlFor="add-location">Location</Label>
+                                <Input
+                                    id="add-location"
+                                    name="location"
+                                    value={editingCard?.location || ''}
+                                    onChange={handleEditInputChange}
+                                    placeholder="Enter Location"
+                                />
+                            </div>
+                            <div className="space-y-2">
                                 <Label htmlFor="add-link">Link</Label>
                                 <Input
                                     id="add-link"
                                     name="link"
                                     value={editingCard?.link || ''}
                                     onChange={handleEditInputChange}
-                                    placeholder="Enter Title"
+                                    placeholder="Enter Link"
                                 />
                             </div>
+
                             <div className="space-y-2">
-                                <Label htmlFor="add-publishData">Publish Data</Label>
-                                <Input
-                                    id="add-publishData"
-                                    name="publishData"
-                                    value={editingCard?.publishData || ''}
-                                    onChange={handleEditInputChange}
-                                    placeholder="Enter publish data"
+                                <Label htmlFor="add-image">Image Upload</Label>
+                                <ImageSelector
+                                    value={editingCard?.imageUrl || ''}
+                                    onChange={(file) => {
+                                        if (file) {
+                                            setFormData(prev => ({
+                                                ...prev,
+                                                imageUrl: file[0]?.url
+                                            }));
+                                        }
+                                    }}
+                                    removeImage={() => setFormData(prev => ({
+                                        ...prev,
+                                        imageUrl: ""
+                                    }))}
                                 />
                             </div>
+
                         </div>
 
 
@@ -324,4 +368,4 @@ const BlogItems: React.FC<BlogItemsProps> = ({
     );
 };
 
-export default BlogItems;
+export default ProjectsItemsRepeater;

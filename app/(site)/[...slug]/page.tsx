@@ -10,7 +10,14 @@ import WelcomeSection from "@/app/components/home/welcomeSection";
 import ChooseNoblekey from "@/app/components/innerPages/chooseNoblekey";
 import FaqSection from "@/app/components/innerPages/faqSection";
 import GeneralContent from "@/app/components/innerPages/generalContent";
+import GetAQuoteRow from "@/app/components/innerPages/getAQuoteRow";
+import ImageInformationCards from "@/app/components/innerPages/imageInformationCards";
 import InnerBanner from "@/app/components/innerPages/innerBanner";
+import OtherServices from "@/app/components/innerPages/otherServices";
+import ProductDescription from "@/app/components/innerPages/productDescription";
+import ProductTable from "@/app/components/innerPages/productTable";
+import ProjectListing from "@/app/components/innerPages/projectsListing";
+import SingleSliderCardSection from "@/app/components/innerPages/singleSliderCard";
 import SolutionsCardSection from "@/app/components/innerPages/solutionsCardSection";
 import MainBanner from "@/app/components/mainBanner";
 
@@ -43,6 +50,13 @@ const componentMap = {
     chooseNobelkey: ChooseNoblekey,
     faqSection: FaqSection,
     solutionsCards: SolutionsCardSection,
+    singleSlider: SingleSliderCardSection,
+    productTable: ProductTable,
+    getAQuoteRow: GetAQuoteRow,
+    imageInformationCards: ImageInformationCards,
+    productDescription: ProductDescription,
+    otherSolutions: OtherServices,
+    projects: ProjectListing,
 
 } as const;
 
@@ -125,12 +139,8 @@ const PagesView = async ({ params }: { params: { slug: string[] } }) => {
     const getPageSlug = params?.slug[params?.slug.length - 1].trim() 
 
     const getPageData = await getPagesViewPageData(getPageSlug);
-    const pageData = getPageData;
-
-    console.log("getPageSlug===", pageData);
+    const pageData = getPageData;   
     
-
-
     const renderComponent = (component: PageComponent) => {
         const Component = componentMap[component.customName];
 

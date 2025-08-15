@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Component, COMPONENT_TYPES } from "@/lib/componentTypes";
 import { Plus, PlusCircle } from "lucide-react";
 import { useState } from "react";
@@ -44,47 +45,50 @@ const AddNewComponent: React.FC<AddNewComponentProps> = ({
                         <DialogTitle>Add new component</DialogTitle>
                     </DialogHeader>
 
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <h3 className="text-sm font-medium mb-3">Page Components</h3>
-                            <div className="space-y-2">
-                                {COMPONENT_TYPES.filter(type => type.category === "basic").map((type) => (
-                                    <Button
-                                        key={type.name}
-                                        onClick={() => {
-                                            setIsOpenDialog(false)
-                                            handleAddComponent(type.name)
-                                        }}
-                                        variant="outline"
-                                        className="w-full justify-start space-x-2"
-                                    >
-                                        <Plus className="h-4 w-4" />
-                                        <span>Add {type.name}</span>
-                                    </Button>
-                                ))}
+                    <ScrollArea className="max-h-[50vh]">    
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <h3 className="text-sm font-medium mb-3 sticky top-0 bg-white pb-2">Page Components</h3>
+                                <div className="space-y-2">
+                                    {COMPONENT_TYPES.filter(type => type.category === "basic").map((type) => (
+                                        <Button
+                                            key={type.name}
+                                            onClick={() => {
+                                                setIsOpenDialog(false)
+                                                handleAddComponent(type.name)
+                                            }}
+                                            variant="outline"
+                                            className="w-full justify-start space-x-2"
+                                        >
+                                            <Plus className="h-4 w-4" />
+                                            <span>Add {type.name}</span>
+                                        </Button>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
 
-                        <div>
-                            <h3 className="text-sm font-medium mb-3">Home Components</h3>
-                            <div className="space-y-2">
-                                {COMPONENT_TYPES.filter(type => type.category === "home").map((type) => (
-                                    <Button
-                                        key={type.name}
-                                        onClick={() => {
-                                            setIsOpenDialog(false)
-                                            handleAddComponent(type.name)
-                                        }}
-                                        variant="outline"
-                                        className="w-full justify-start space-x-1"
-                                    >
-                                        <Plus className="h-4 w-4" />
-                                        <span>Add {type.name}</span>
-                                    </Button>
-                                ))}
+                            <div>
+                                <h3 className="text-sm font-medium mb-3  sticky top-0 bg-white pb-2">Home Components</h3>
+                                <div className="space-y-2">
+                                    {COMPONENT_TYPES.filter(type => type.category === "home").map((type) => (
+                                        <Button
+                                            key={type.name}
+                                            onClick={() => {
+                                                setIsOpenDialog(false)
+                                                handleAddComponent(type.name)
+                                            }}
+                                            variant="outline"
+                                            className="w-full justify-start space-x-1"
+                                        >
+                                            <Plus className="h-4 w-4" />
+                                            <span>Add {type.name}</span>
+                                        </Button>
+                                    ))}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </ScrollArea>
+
                 </DialogContent>
             </Dialog>
         </div>
