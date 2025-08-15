@@ -10,6 +10,7 @@ import { Component } from "@/lib/componentTypes";
 import { LoaderCircle } from "lucide-react";
 import { ChangeEvent, useState, useEffect } from "react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface CreateNewPageProps {
     data?: {
@@ -49,6 +50,7 @@ interface OgSeoData {
 const CreateNewPage: React.FC<CreateNewPageProps> = ({
     data
 }) => {
+    const router = useRouter();
     const [title, setTitle] = useState<string>('');
     const [slug, setSlug] = useState<string>('');
     const [componentData, setComponentData] = useState<Component[]>([]);
@@ -178,10 +180,17 @@ const CreateNewPage: React.FC<CreateNewPageProps> = ({
 
             if (!response.ok) throw new Error('Failed to create page');
 
-            toast.success("Successfully Created!", {
+            toast.success(`Successfully ${isEdit ? 'Updated' : 'Created'}!`, {
                 position: "top-center",
                 richColors: true,
             });
+
+            // Redirect to pages listing after successful creation/update
+            setTimeout(() => {
+                router.push('/admin/pages');
+                router.refresh(); // This will refresh the page data
+            }, 1000); // Small delay to show the success toast
+
         } catch (error) {
             console.error('Error creating page:', error);
             alert('Failed to create page. Please try again.');
