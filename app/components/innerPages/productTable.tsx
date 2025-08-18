@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { ChevronRight, Download, FileText } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -35,7 +36,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
     const documentsItems: DocProps[] = typeof documents === 'string' ? JSON.parse(documents) : (documents || []);
 
     const handlerTabChange = (type: string) => {
-        if(isAdmin){
+        if (isAdmin) {
             return false;
         }
         setActiveTab(type);
@@ -57,11 +58,22 @@ const ProductTable: React.FC<ProductTableProps> = ({
 
     return (
         <div className="mb-10 max-w-[1400px] mx-auto ">
-            <div className="grid grid-cols-3 gap-0  border-t-[1px] border-b-[1px] text-sm font-semibold mb-1">
+
+            <ScrollArea className="w-full whitespace-nowrap md:hidden">
+                <div className="flex w-full gap-0 border-t-[1px] border-b-[1px] text-sm font-semibold mb-1">
+                    <button className={`p-5 text-center w-full border-b-2 ${activeTab === "fb" ? 'border-b-blue-700 text-black' : 'border-transparent text-muted-foreground'} border-r-[1px] border-r-black/15`} onClick={() => handlerTabChange('fb')}>Featured & Benefits</button>
+                    <button className={`p-5 text-center w-full border-b-2 ${activeTab === "bi" ? 'border-b-blue-700 text-black' : 'border-transparent text-muted-foreground'} border-r-[1px] border-r-black/15`} onClick={() => handlerTabChange('bi')}>Basic Information</button>
+                    <button className={`p-5 text-center w-full border-b-2 ${activeTab === "dc" ? 'border-b-blue-700 text-black' : 'border-transparent text-muted-foreground'}`} onClick={() => handlerTabChange('dc')}>Documents</button>
+                </div>
+                <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+
+            <div className="hidden md:grid grid-cols-3 gap-0  border-t-[1px] border-b-[1px] text-sm font-semibold mb-1">
                 <button className={`p-5 text-center w-full border-b-2 ${activeTab === "fb" ? 'border-b-blue-700 text-black' : 'border-transparent text-muted-foreground'} border-r-[1px] border-r-black/15`} onClick={() => handlerTabChange('fb')}>Featured & Benefits</button>
                 <button className={`p-5 text-center w-full border-b-2 ${activeTab === "bi" ? 'border-b-blue-700 text-black' : 'border-transparent text-muted-foreground'} border-r-[1px] border-r-black/15`} onClick={() => handlerTabChange('bi')}>Basic Information</button>
                 <button className={`p-5 text-center w-full border-b-2 ${activeTab === "dc" ? 'border-b-blue-700 text-black' : 'border-transparent text-muted-foreground'}`} onClick={() => handlerTabChange('dc')}>Documents</button>
             </div>
+
 
             {(arrayData && arrayData.length > 0) && (activeTab === 'fb' || activeTab === 'bi') && <div className="flex flex-col gap-1">
                 {arrayData?.map((d, i) => (

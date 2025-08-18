@@ -60,6 +60,7 @@ const ProjectSlider: React.FC<ProjectSliderProps> = ({
                             </CarouselItem>
                         ))}
                     </CarouselContent>
+                    
                     <CarouselPrevious className="hidden xl:flex" />
                     <CarouselNext className="hidden xl:flex" />
                 </Carousel>

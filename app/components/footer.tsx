@@ -49,8 +49,7 @@ const Footer: React.FC = () => {
         }
         return pathname === url.pathname;
     };
-
-
+    
     return (
         <>
             <div className="relative border-b-[1px] border-black/10">
@@ -80,7 +79,7 @@ const Footer: React.FC = () => {
                 </div>}
 
 
-                {footerData?.topDescription && <div className="md:w-[60%] mx-auto text-center mb-4">
+                {footerData?.topDescription && <div className="md:w-[60%] mx-auto text-center mb-4 px-5 md:px-0">
                     <p className="text-sm capitalize" dangerouslySetInnerHTML={{ __html: footerData?.topDescription }}></p>
                 </div>}
 
@@ -152,7 +151,7 @@ const Footer: React.FC = () => {
                     )}
 
 
-                    <Link href={'/'} className="w-[150px]">
+                    <Link href={'/'} className="w-[150px] my-5 lg:my-0">
                         {footerData?.logo && <Image src={footerData?.logo} width={200} height={100} alt="nobleky logo" />}
                     </Link>
 

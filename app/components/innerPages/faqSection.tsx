@@ -34,7 +34,7 @@ const FaqSection: React.FC<FaqSectionProps> = ({
                 defaultValue="item-0"
             >
                 {rowItems?.map((d, i) => (
-                    <AccordionItem value={`item-${i}`} key={i} className="data-[state=open]:border-b-4 data-[state=open]:border-[#3C51A3]">
+                    <AccordionItem value={`item-${i}`} key={i} className="data-[state=open]:border-b-4 data-[state=open]:border-[#3C51A3] px-5 md:px-0">
                         <AccordionTrigger className="font-extrabold text-[16px]">{d?.title}</AccordionTrigger>
                         <AccordionContent className="flex flex-col gap-4 ">
                             <p dangerouslySetInnerHTML={{ __html: processContent(d?.description || '') }}></p>

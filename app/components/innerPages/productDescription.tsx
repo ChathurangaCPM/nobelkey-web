@@ -27,7 +27,7 @@ const ProductDescription: React.FC<ProductDescriptionProps> = ({
     const rowItems: InfoItemProps[] = typeof itemContent === 'string' ? JSON.parse(itemContent) : (itemContent || []);
 
     return (
-        <div className="relative max-w-[1000px] mx-auto p-2 overflow-hidden mb-20 flex flex-col gap-5">
+        <div className="relative max-w-[1000px] mx-auto p-2 overflow-hidden mb-20 flex flex-col gap-5 px-5 md:px-0">
             {mainTitle && <h3 className="font-extrabold text-4xl mb-5" dangerouslySetInnerHTML={{ __html: mainTitle || '' }}></h3>}
             {content && <p dangerouslySetInnerHTML={{ __html: processContent(content || '') }}></p>}
             {rowItems && rowItems?.length > 0 && rowItems?.map((d, i) => (

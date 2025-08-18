@@ -12,7 +12,7 @@ const GeneralContent: React.FC<GeneralContentProps> = ({
     };
 
     return (
-        <div className="text-center py-14 pb-0 max-w-[800px] mx-auto mb-20">
+        <div className="text-center py-14 pb-0 max-w-[800px] mx-auto mb-20 px-5 md:px-0">
             {title && <h2 className="font-extrabold text-4xl mb-5">{title}</h2>}
             <p dangerouslySetInnerHTML={{ __html: processContent(content || '') }}></p>
         </div>

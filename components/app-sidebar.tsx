@@ -13,6 +13,7 @@ import {
   Car,
   Calendar1,
   Image,
+  Mail,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -77,21 +78,28 @@ const initData = {
         },
       ],
     },
-    {
-      title: "Posts",
-      url: "#",
-      icon: StickyNote,
-      items: [
-        {
-          title: "Create New",
-          url: "#",
-        },
-      ],
-    },
+    // {
+    //   title: "Posts",
+    //   url: "#",
+    //   icon: StickyNote,
+    //   items: [
+    //     {
+    //       title: "Create New",
+    //       url: "#",
+    //     },
+    //   ],
+    // },
     {
       title: "Media Library",
       url: "/admin/media-library",
       icon: Image,
+      items: [
+      ],
+    },
+    {
+      title: "Contact",
+      url: "/admin/contact",
+      icon: Mail,
       items: [
       ],
     },

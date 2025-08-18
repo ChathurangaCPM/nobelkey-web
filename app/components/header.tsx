@@ -39,10 +39,10 @@ const Header: React.FC = () => {
 
     const mobileNavigationItems = [
         { name: 'Home', href: '/' },
-        { name: 'Company', href: '/company' },
-        { name: 'Our Taxi', href: '/our-taxi' },
-        { name: 'Blog', href: '/blog' },
-        { name: 'Contact', href: '/contact' }
+        { name: 'NobleKey', href: '/noblekey' },
+        { name: 'Our Services', href: '/our-services' },
+        { name: 'Our Products', href: '/our-products' },
+        { name: 'Contact Us', href: '/contact-us' }
     ];
 
     const getIcon = (iconName: string) => {
@@ -127,7 +127,7 @@ const Header: React.FC = () => {
             <div className={`w-11/12 xl:max-w-[1400px] border-b border-white/15 mx-auto flex justify-between items-center px-2 md:px-0 relative z-30 transition-all duration-300 ${!visible || !isHomePage ? 'py-1' : 'py-4'}`}>
                 <div className='text-[#808285] flex-1 text-[15px]'>
                     <div className='xl:hidden'>
-                        <Button variant={'ghost'} className='focus:bg-transparent focus:text-black' onClick={() => setOpenSheet(true)}>
+                        <Button variant={'ghost'} className='focus:bg-transparent focus:text-black text-white p-0' onClick={() => setOpenSheet(true)}>
                             <AlignJustify />
                             Menu
                         </Button>

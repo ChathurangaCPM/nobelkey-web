@@ -34,11 +34,9 @@ const SingleSliderCardSection: React.FC<SingleSliderCardSectionProps> = ({
                     ))}
                 </CarouselContent>
                 
-                {!isAdmin && <CarouselPrevious />}
-                {!isAdmin && <CarouselNext />}
-                
+                {!isAdmin && <CarouselPrevious className="hidden xl:flex"/>}
+                {!isAdmin && <CarouselNext className="hidden xl:flex"/>}
             </Carousel>
-
         </div>
     )
 }
