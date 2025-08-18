@@ -8,7 +8,7 @@ export async function GET() {
         await connectDB();
        
         // Fetch theme data with explicit conditions and error handling
-        const themeData = await Theme.find().lean().exec();
+        const themeData = await Theme.find().select('-emailSettings').lean().exec();
 
         // Check if theme data exists
         if (!themeData || themeData.length === 0) {
@@ -17,6 +17,7 @@ export async function GET() {
                 message: 'No theme data found'
             }, { status: 404 });
         }
+        
 
         return NextResponse.json({
             success: true,

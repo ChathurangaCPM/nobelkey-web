@@ -72,7 +72,7 @@ const InnerBanner: React.FC<InnerBannerProps> = ({
     }, [pathname, customLabels]);
 
     return (
-        <div className="relative pb-[80px]">
+        <div className="relative pb-[180px] md:pb-[80px]">
             <Image 
                 src={backgroundImage || 'https://dummyimage.com/1920x300/b6b6b6/fff'} 
                 width={1920} 
@@ -111,8 +111,8 @@ const InnerBanner: React.FC<InnerBannerProps> = ({
                         </BreadcrumbList>
                     </Breadcrumb>
                 </div>
-                <div className="flex items-center justify-center gap-2 flex-col relative z-20">
-                    {mainTitle && <h1 className="font-extrabold text-4xl leading-snug">{mainTitle}</h1>}
+                <div className="flex items-center justify-center gap-2 flex-col relative z-20 px-5 md:px-0">
+                    {mainTitle && <h1 className="font-extrabold text-4xl leading-snug text-center">{mainTitle}</h1>}
                     {subLine && <p>{subLine}</p>}
                 </div>
             </div>

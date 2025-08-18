@@ -29,9 +29,13 @@ export function SiteProvider({ children }: SiteProviderProps) {
                 method: "GET",
             });
 
+            
+
+
             if (res && res.status === 200) {
                 const { data } = await res.json();
 
+                 console.log("data==",data);
                 setSiteState(data);
                 setIsLoadingSiteData(false);
             }

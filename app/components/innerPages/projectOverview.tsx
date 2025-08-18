@@ -54,24 +54,24 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
                 )}
             </div>
 
-            <div className="flex items-start relative -top-[170px] -mb-[170px]">
-                <div className="flex flex-col divide-y-[1px] border-t-[1px] border-white/20 divide-white/20">
+            <div className="flex flex-col lg:flex-row items-start relative lg:-top-[170px] md:-mb-[170px]">
+                <div className="flex w-full lg:w-[150px] items-center flex-row lg:flex-col  divide-y-[1px] divide-x-[1px] lg:divide-x-0 border-b-[1px] lg:border-b-0 lg:border-t-[1px] border-black/20 lg:border-white/20 divide-black/20 lg:divide-white/20">
                     <button 
                         onClick={goToPrevious}
-                        className="px-10 py-5 transition-all ease-in-out duration-150 hover:bg-white/10"
+                        className="px-0 lg:px-10 flex-1 flex items-center justify-center py-2 lg:py-5 transition-all ease-in-out duration-150 hover:bg-white/10"
                         disabled={rowItems.length <= 1}
                     >
-                        <ChevronLeft size={45} strokeWidth={1} className="text-white"/>
+                        <ChevronLeft size={45} strokeWidth={1} className="text-black lg:text-white"/>
                     </button>
                     <button 
                         onClick={goToNext}
-                        className="px-10 py-5 transition-all ease-in-out duration-150 hover:bg-white/10"
+                        className="px-0 lg:px-10 flex-1 flex items-center justify-center py-2 lg:py-5 transition-all ease-in-out duration-150 hover:bg-white/10"
                         disabled={rowItems.length <= 1}
                     >
-                        <ChevronRight size={45} strokeWidth={1} className="text-white"/>
+                        <ChevronRight size={45} strokeWidth={1} className="text-black lg:text-white"/>
                     </button>
                 </div>
-                <div className="bg-white p-20">
+                <div className="bg-white p-5 lg:p-20">
                     {content && (
                         <div
                             className="rich-content max-w-none text-gray-700 leading-relaxed

@@ -24,7 +24,7 @@ const ProjectListing: React.FC<ProjectListingProps> = ({
     const rowItems: ProjectItemsProps[] = typeof projectItems === 'string' ? JSON.parse(projectItems) : (projectItems || []);
     
     return (
-        <div className="relative max-w-[1400px] mx-auto grid grid-cols-3 gap-4 mb-10">
+        <div className="relative max-w-[1400px] mx-auto grid grid-cols-1 px-5 lg:px-0 lg:grid-cols-3 gap-4 mb-10">
             {rowItems && rowItems?.length > 0 && rowItems?.map((d, i) => (
                 <Link key={i} href={d?.link || '#'} className={'border-[1px] rounded-md overflow-hidden shadow-md transition-all ease-in-out duration-150 hover:shadow-lg hover:scale-[1.01]'}>
                     <div className="p-8 md:p-16 flex flex-col gap-5">

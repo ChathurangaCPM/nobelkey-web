@@ -13,6 +13,7 @@ import {
   Car,
   Calendar1,
   Image,
+  Mail,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -27,6 +28,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { useSession } from "next-auth/react"
+import Link from "next/link"
 
 const initData = {
   user: {
@@ -77,21 +79,28 @@ const initData = {
         },
       ],
     },
-    {
-      title: "Posts",
-      url: "#",
-      icon: StickyNote,
-      items: [
-        {
-          title: "Create New",
-          url: "#",
-        },
-      ],
-    },
+    // {
+    //   title: "Posts",
+    //   url: "#",
+    //   icon: StickyNote,
+    //   items: [
+    //     {
+    //       title: "Create New",
+    //       url: "#",
+    //     },
+    //   ],
+    // },
     {
       title: "Media Library",
       url: "/admin/media-library",
       icon: Image,
+      items: [
+      ],
+    },
+    {
+      title: "Contact",
+      url: "/admin/contact",
+      icon: Mail,
       items: [
       ],
     },
@@ -190,15 +199,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <Link href="/" target="_blank">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                   <Command className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Acme Inc</span>
-                  <span className="truncate text-xs">Enterprise</span>
+                  <span className="truncate font-semibold">NobelKey</span>
+                  <span className="truncate text-xs">Admin Panel</span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

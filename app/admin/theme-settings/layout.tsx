@@ -18,6 +18,7 @@ const menuItems: MenuItem[] = [
   { label: 'Header', path: '/admin/theme-settings/header' },
   { label: 'Footer', path: '/admin/theme-settings/footer' },
   { label: 'Home Page', path: '/admin/theme-settings/home-page' },
+  { label: 'Email Settings', path: '/admin/theme-settings/email' },
 ];
 
 export default function ThemeSettingsLayout({ children }: ThemeSettingsLayoutProps) {

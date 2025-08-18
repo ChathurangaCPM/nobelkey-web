@@ -9,6 +9,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import TopHeader from '@/app/components/admin/theme/topHeader';
 import { Button } from '@/components/ui/button';
 import MultiContentForm from '@/app/components/admin/theme/mainHeaderContact';
+import AdminHeaderNavigationLinks from '@/app/components/admin/theme/navigationLinks';
 import { toast } from 'sonner';
 import { LoaderCircle } from 'lucide-react';
 import { useAuthContext } from '@/providers/auth-provider';
@@ -28,6 +29,11 @@ const generalSettingsFormSchema = z.object({
         iconName: z.string().optional(),
         link: z.string().optional()
     })).optional(),
+    navigationLinks: z.array(z.object({
+        id: z.number(),
+        title: z.string(),
+        url: z.string()
+    })).optional(),
 });
 
 interface ImageType {
@@ -42,11 +48,19 @@ interface MainContentProps {
     iconName?: string;
     link?: string;
 }
+
+interface NavigationLinkProps {
+    id: number;
+    title: string;
+    url: string;
+}
+
 interface ThemeData {
     header?: {
         logo?: string;
         topLeftText?: string;
         mainContent?: Array<MainContentProps>;
+        navigationLinks?: Array<NavigationLinkProps>;
     };
 }
 
@@ -67,7 +81,8 @@ export default function ThemeSettingHeaderPage() {
         defaultValues: {
             logo: "",
             topLeftText: '',
-            mainContent: [{ id: 1, topTitle: '', content: '', iconName: '', link: '' }]
+            mainContent: [{ id: 1, topTitle: '', content: '', iconName: '', link: '' }],
+            navigationLinks: []
         },
     });
 
@@ -141,6 +156,7 @@ export default function ThemeSettingHeaderPage() {
             setValue('logo', header.logo || '');
             setValue('topLeftText', header.topLeftText || '');
             setValue('mainContent', header.mainContent || []);
+            setValue('navigationLinks', header.navigationLinks || []);
             setValue('fb', header.fb || '');
             setValue('twt', header.twt || '');
             setValue('insta', header.insta || '');
@@ -161,8 +177,8 @@ export default function ThemeSettingHeaderPage() {
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                     {/* Rest of the JSX remains the same */}
                     <div className="space-y-3">
-                        <TopHeader control={form.control} />
-                        <hr />
+                        {/* <TopHeader control={form.control} />
+                        <hr /> */}
                         <div className='flex gap-4'>
 
                             <FormField
@@ -186,7 +202,7 @@ export default function ThemeSettingHeaderPage() {
                                 )}
                             />
 
-                            <FormField
+                            {/* <FormField
                                 control={form.control}
                                 name="mainContent"
                                 render={({ field }) => (
@@ -202,8 +218,23 @@ export default function ThemeSettingHeaderPage() {
                                         <FormMessage className="text-xs" />
                                     </FormItem>
                                 )}
-                            />
+                            /> */}
                         </div>
+                        
+                        <hr />
+                        
+                        <FormField
+                            control={form.control}
+                            name="navigationLinks"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <AdminHeaderNavigationLinks />
+                                    </FormControl>
+                                    <FormMessage className="text-xs" />
+                                </FormItem>
+                            )}
+                        />
                     </div>
 
                     <Button type='submit' disabled={isLoading}>

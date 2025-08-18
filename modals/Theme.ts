@@ -8,6 +8,7 @@ export interface ITheme extends Document {
     selectedHomePage: mongoose.Types.ObjectId | IPages;
     mainConfigurations?: object;
     header?: object;
+    emailSettings?: object[];
     locations?: object[];
     fees?: object[];
     footer?: object;// You can make this more specific based on your needs
@@ -36,6 +37,9 @@ const ThemeSchema = new Schema<ITheme>({
     },
 
     locations:{
+        type: Array,
+    },
+    emailSettings:{
         type: Array,
     },
     fees:{

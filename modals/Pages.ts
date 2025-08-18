@@ -17,6 +17,8 @@ export interface IPages extends Document {
   url: string;
   access?: any[];
   parent?: mongoose.Types.ObjectId | IPages;
+  isHome?: boolean;
+  pageData?: object;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -66,6 +68,14 @@ const PagesSchema = new Schema<IPages>({
     type: Schema.Types.ObjectId,
     ref: 'Pages',
     default: null,
+  },
+  isHome: {
+    type: Boolean,
+    default: false
+  },
+  pageData: {
+    type: Object,
+    default: {}
   },
   createdAt: {
     type: Date,

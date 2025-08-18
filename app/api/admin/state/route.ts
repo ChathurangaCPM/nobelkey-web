@@ -23,6 +23,7 @@ export async function GET() {
         const updatedTheme = await Theme.findOne(
             { userId: session.user.id }
         ).lean();
+        
 
 
         return NextResponse.json({

@@ -105,7 +105,7 @@ const ThemeSettingPage: React.FC = () => {
         <div className="space-y-5">
             <h1 className="text-2xl font-semibold">Theme Settings</h1>
 
-            <div>
+            {/* <div>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <FormField
@@ -130,7 +130,7 @@ const ThemeSettingPage: React.FC = () => {
                         </div>
                     </form>
                 </Form>
-            </div>
+            </div> */}
 
             <div className="grid grid-cols-3 gap-5">
                 <Link href="/admin/theme-settings/header">
@@ -152,6 +152,13 @@ const ThemeSettingPage: React.FC = () => {
                         <Home strokeWidth={1} />
                         <h2 className="font-semibold">Home page</h2>
                         <p>Customize Home page</p>
+                    </Card>
+                </Link>
+                <Link href="/admin/theme-settings/email">
+                    <Card className="cursor-pointer space-y-3 p-4">
+                        <Home strokeWidth={1} />
+                        <h2 className="font-semibold">Email Settings</h2>
+                        <p>Change the email settings</p>
                     </Card>
                 </Link>
             </div>

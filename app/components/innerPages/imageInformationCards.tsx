@@ -28,7 +28,7 @@ const ImageInformationCards: React.FC<ImageInformationCardsProps> = ({
     return (
         <div className="relative max-w-[1400px] mx-auto p-2 overflow-hidden mb-20">
             <Image src={imageUrl || 'https://dummyimage.com/1200x500/ddd/fff'} alt="" width={1200} height={800} className="absolute left-0 top-0 w-full h-full object-cover z-0" />
-            {rowItems && rowItems?.length > 0 && <div className="grid grid-cols-3 gap-2 divide-x-[1px] bg-white relative z-10 mb-[38vh]">
+            {rowItems && rowItems?.length > 0 && <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 divide-x-[1px] bg-white relative z-10 mb-[38vh]">
                 {rowItems?.map((d, i) => (
                     <div key={i} className="p-16 flex flex-col gap-8">
                         {d?.icon && <div className="w-[60px]">

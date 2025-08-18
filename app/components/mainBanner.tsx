@@ -92,7 +92,7 @@ const MainBanner: React.FC<MainBannerProps> = ({
                 />
             </motion.div>
 
-            <div className="h-[40vh] xl:h-[50vh] bg-[#0F1A42] relative -z-10"></div>
+            <div className="h-[52.5vh] xl:h-[50vh] bg-[#0F1A42] relative -z-10"></div>
 
             <div className="relative w-full bg-[#0F1A42] xl:bg-transparent">
                 <div className="flex items-start gap-2 justify-between w-full border-b-[1px] border-black/5 xl:absolute top-0 left-0">
@@ -102,7 +102,7 @@ const MainBanner: React.FC<MainBannerProps> = ({
             </div>
 
             <div className="flex flex-col xl:flex-row items-center gap-0 bg-[#0F1A42] xl:bg-transparent">
-                <div className="w-full xl:w-[50%] xl:pl-[10vw] pt-10 xl:pt-[10vw] flex flex-col gap-8 p-2">
+                <div className="w-full xl:w-[50%] xl:pl-[10vw] pt-28 xl:pt-[10vw] flex flex-col gap-8 p-2">
                     <div className="text-sm font-medium xl:w-[40%] pl-3 leading-[18px] relative text-white xl:text-black">
                         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[85%] bg-[#3C51A3]"></div>
                         {leftText || "Discover Engineered Solutions Designed to Optimize Performance and Value"}
@@ -111,7 +111,7 @@ const MainBanner: React.FC<MainBannerProps> = ({
                 </div>
                 
                 <div className="w-full xl:w-[50%] relative overflow-hidden">
-                    <div className="relative overflow-hidden h-[22vh] xl:h-[19.8vw]">
+                    <div className="relative overflow-hidden h-[12vh] xl:h-[19.8vw]">
                         <video
                             src="/video/slider-back.mp4"
                             ref={videoRef}
