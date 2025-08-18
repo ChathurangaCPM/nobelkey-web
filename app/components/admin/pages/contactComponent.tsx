@@ -9,6 +9,8 @@ import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import moment from 'moment';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import NewsletterComponent from "./newsletterComponent";
 
 
 // app/components/admin/pages/page-component.tsx
@@ -72,14 +74,31 @@ function ContactComponent({ initialData }: ContactComponentProps) {
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold">Contact Form Entries</h2>
+                <h2 className="text-2xl font-bold">Contact Management</h2>
             </div>
-            <DataTable
-                columns={columns}
-                data={data}
-                onRowClick={(d) => handlerOpenModal(d)}
-                loading={false}
-            />
+            
+            <Tabs defaultValue="contacts" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="contacts">Contact Forms</TabsTrigger>
+                    <TabsTrigger value="newsletter">Newsletter Subscribers</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="contacts" className="space-y-4">
+                    <div className="flex items-center justify-between">
+                        <h3 className="text-xl font-semibold">Contact Form Entries</h3>
+                    </div>
+                    <DataTable
+                        columns={columns}
+                        data={data}
+                        onRowClick={(d) => handlerOpenModal(d)}
+                        loading={false}
+                    />
+                </TabsContent>
+                
+                <TabsContent value="newsletter" className="space-y-4">
+                    <NewsletterComponent />
+                </TabsContent>
+            </Tabs>
 
             <Dialog open={openDialog} onOpenChange={() => setOpenDialog(false)}>
                 <DialogContent>

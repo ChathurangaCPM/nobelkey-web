@@ -10,6 +10,7 @@ import Image from 'next/image';
 import * as LucideIcons from 'lucide-react';
 import { useSiteContext } from '@/providers/site-provider';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import ReadMoreButton from './common/readMoreButton';
 
 interface MainContent {
     id: number;
@@ -29,21 +30,12 @@ const Header: React.FC = () => {
 
     const [headerData, setHeaderData] = useState(siteState?.header || {});
 
-    const navigationItems = [
-        { name: 'Home', href: '/' },
-        { name: 'NobleKey', href: '/noblekey' },
-        { name: 'Our Services', href: '/our-services' },
-        { name: 'Our Products', href: '/our-products' },
-        { name: 'Contact Us', href: '/contact-us' }
-    ];
+    const navigationItems = siteState?.header?.navigationLinks || [];
 
-    const mobileNavigationItems = [
-        { name: 'Home', href: '/' },
-        { name: 'NobleKey', href: '/noblekey' },
-        { name: 'Our Services', href: '/our-services' },
-        { name: 'Our Products', href: '/our-products' },
-        { name: 'Contact Us', href: '/contact-us' }
-    ];
+    
+    
+    const mobileNavigationItems = siteState?.header?.navigationLinks || [];
+    
 
     const getIcon = (iconName: string) => {
         const Icon = iconName ? (LucideIcons[iconName as keyof typeof LucideIcons] as LucideIcon) : null;
@@ -134,28 +126,30 @@ const Header: React.FC = () => {
                     </div>
 
                     <nav className="hidden xl:flex">
-                        {navigationItems.map((item) => (
+                        {navigationItems.map((item: { id: number; url: string; title: string }) => (
                             <Link
-                                key={item.name}
-                                href={item.href}
-                                className={getLinkClassName(item.href)}
+                                key={item.id}
+                                href={item.url}
+                                className={getLinkClassName(item.url)}
                             >
-                                {item.name}
+                                {item.title}
                             </Link>
                         ))}
                     </nav>
                 </div>
                 <div className='flex justify-center items-center'>
-                    <Link href="/" className="w-[140px] min-h-[70px] flex justify-center items-center">
+                    <Link href="/" className="w-[100px] md:w-[140px] min-h-[70px] flex justify-center items-center">
                         {headerData?.logo && <Image src={headerData?.logo} alt="Main logo" width={150} height={80} className='w-full block' />}
                     </Link>
                 </div>
                 <div className='flex-1 flex justify-end'>
-                    <div className='flex flex-col gap-[6px] w-[40px] cursor-pointer'>
+                    {/* <ReadMoreButton title='Contact Us'/> */}
+                    {siteState?.footer?.contactNumber && <Link className='text-xs md:text-sm text-white flex items-center gap-2' href={`tel:${siteState?.footer?.contactNumber}`}><LucideIcons.Phone className='hidden md:block' size={15}/>{siteState?.footer?.contactNumber}</Link>}
+                    {/* <div className='flex flex-col gap-[6px] w-[40px] cursor-pointer'>
                         <span className='bg-white h-[2px] w-full'></span>
                         <span className='bg-white h-[2px] w-full'></span>
                         <span className='bg-white h-[2px] w-full'></span>
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
@@ -165,14 +159,14 @@ const Header: React.FC = () => {
                         <SheetTitle></SheetTitle>
                     </SheetHeader>
                     <div className='flex flex-col gap-1 mt-4'>
-                        {mobileNavigationItems.map((item) => (
+                        {mobileNavigationItems.map((item: { id: number; url: string; title: string }) => (
                             <Link
-                                key={item.name}
-                                href={item.href}
-                                className={getMobileLinkClassName(item.href)}
+                                key={item.id}
+                                href={item.url}
+                                className={getMobileLinkClassName(item.url)}
                                 onClick={() => setOpenSheet(false)}
                             >
-                                {item.name}
+                                {item.title}
                             </Link>
                         ))}
                     </div>

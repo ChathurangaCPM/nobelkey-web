@@ -7,9 +7,22 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect, useRef, useState } from "react";
 import { UrlObject } from "url";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 
 import moment from "moment";
 import { IconGoogleColor } from "./common/svgIcons";
+
+const newsletterSchema = z.object({
+    email: z.string()
+        .min(1, "Email is required")
+        .email("Please enter a valid email address")
+        .max(100, "Email cannot exceed 100 characters"),
+});
+
+type NewsletterFormValues = z.infer<typeof newsletterSchema>;
 
 interface WorkingHours {
     id?: number,
@@ -26,9 +39,17 @@ interface UsefulLinks {
 const Footer: React.FC = () => {
     const { siteState } = useSiteContext();
     const [footerData, setFooterData] = useState(siteState?.footer || {});
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const pathname = usePathname();
 
     const videoRef = useRef<HTMLVideoElement>(null);
+
+    const form = useForm<NewsletterFormValues>({
+        resolver: zodResolver(newsletterSchema),
+        defaultValues: {
+            email: "",
+        }
+    });
 
     useEffect(() => {
         const video = videoRef.current;
@@ -48,6 +69,41 @@ const Footer: React.FC = () => {
             return pathname === url;
         }
         return pathname === url.pathname;
+    };
+
+    const onSubmit = async (values: NewsletterFormValues) => {
+        setIsSubmitting(true);
+        try {
+            const response = await fetch(`/api/site/newsletter`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: values.email,
+                    source: 'footer'
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                toast.success('Successfully subscribed!', {
+                    description: 'Thank you for subscribing to our newsletter. Please check your email for confirmation.'
+                });
+                form.reset();
+            } else {
+                toast.error('Subscription failed', {
+                    description: data.message || 'Please try again later'
+                });
+            }
+        } catch (error) {
+            toast.error('Something went wrong!', {
+                description: 'Please try again later'
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
     
     return (
@@ -83,12 +139,33 @@ const Footer: React.FC = () => {
                     <p className="text-sm capitalize" dangerouslySetInnerHTML={{ __html: footerData?.topDescription }}></p>
                 </div>}
 
-                <div className="px-5 md:px-0 xl:w-[600px] mx-auto flex ">
-                    <input type="email" placeholder="Enter Your Email Here" className="outline-none border-[1px] border-black/10 border-r-0 px-8 w-full placeholder:text-sm transition-all ease-in-out duration-150 focus:border-[#3C51A3]" />
-                    <button className="bg-[#3C51A3] w-[100px] h-[60px] md:h-[80px] flex items-center justify-center transition-all ease-in-out duration-150 hover:bg-[#2e3f83]">
-                        <ArrowUpRight strokeWidth={1.5} size={25} className="text-white p-0 block" />
-                    </button>
-                </div>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="px-5 md:px-0 xl:w-[600px] mx-auto">
+                    <div className="flex">
+                        <input 
+                            type="email" 
+                            placeholder="Enter Your Email Here" 
+                            className="outline-none border-[1px] border-black/10 border-r-0 px-8 w-full placeholder:text-sm transition-all ease-in-out duration-150 focus:border-[#3C51A3]"
+                            {...form.register("email")}
+                            disabled={isSubmitting}
+                        />
+                        <button 
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="bg-[#3C51A3] w-[100px] h-[60px] md:h-[80px] flex items-center justify-center transition-all ease-in-out duration-150 hover:bg-[#2e3f83] disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {isSubmitting ? (
+                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            ) : (
+                                <ArrowUpRight strokeWidth={1.5} size={25} className="text-white p-0 block" />
+                            )}
+                        </button>
+                    </div>
+                    {form.formState.errors.email && (
+                        <p className="text-red-500 text-xs mt-2 text-center">
+                            {form.formState.errors.email.message}
+                        </p>
+                    )}
+                </form>
             </div>
 
             <div className="border-t-[1px] border-black/10 text-sm py-3 px-5 md:px-0 md:py-0">

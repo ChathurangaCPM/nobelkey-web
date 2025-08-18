@@ -1,13 +1,24 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
-import {  MoreHorizontal } from "lucide-react";
+import {  MoreHorizontal, Trash2 } from "lucide-react";
 import { DataTable } from "../common/dataTable";
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import moment from 'moment';
+import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 
 // app/components/admin/pages/page-component.tsx
@@ -27,9 +38,45 @@ type PageComponentProps = {
 }
 
 function PageComponent({ initialData }: PageComponentProps) {
-    const [data] = useState<PageData[]>(initialData || []);
+    const [data, setData] = useState<PageData[]>(initialData || []);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [pageToDelete, setPageToDelete] = useState<PageData | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
     
     const router = useRouter()
+
+    const handleDeleteClick = (page: PageData) => {
+        setPageToDelete(page);
+        setDeleteDialogOpen(true);
+    };
+
+    const handleDeleteConfirm = async () => {
+        if (!pageToDelete) return;
+
+        setIsDeleting(true);
+        try {
+            const response = await fetch(`/api/admin/page?id=${pageToDelete._id}`, {
+                method: 'DELETE',
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                toast.success('Page deleted successfully');
+                // Remove the deleted page from the data
+                setData(prevData => prevData.filter(page => page._id !== pageToDelete._id));
+                setDeleteDialogOpen(false);
+                setPageToDelete(null);
+            } else {
+                toast.error(result.message || 'Failed to delete page');
+            }
+        } catch (error) {
+            console.error('Delete error:', error);
+            toast.error('Failed to delete page');
+        } finally {
+            setIsDeleting(false);
+        }
+    };
 
     // Function to organize pages into hierarchical structure
     const organizePages = (pages: PageData[]): PageData[] => {
@@ -115,21 +162,37 @@ function PageComponent({ initialData }: PageComponentProps) {
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
+                <Button 
+                  variant="ghost" 
+                  className="h-8 w-8 p-0"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <span className="sr-only">Open menu</span>
                   <MoreHorizontal />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuItem
-                  onClick={() => router.push(`/admin/pages/${data?._id}`)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push(`/admin/pages/${data?._id}`);
+                  }}
                 >
                   Edit Page
                 </DropdownMenuItem>
-                {/* <DropdownMenuSeparator />
-                <DropdownMenuItem>View customer</DropdownMenuItem>
-                <DropdownMenuItem>View payment details</DropdownMenuItem> */}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteClick(data);
+                  }}
+                  className="text-red-600 focus:text-red-600"
+                  disabled={data.isHomePage}
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete Page
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           )
@@ -149,6 +212,32 @@ function PageComponent({ initialData }: PageComponentProps) {
                 onRowClick={(d) => router.push(`/admin/pages/${d?._id}`)} 
                 loading={false}
             />
+
+            <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Page</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Are you sure you want to delete "{pageToDelete?.title}"? This action cannot be undone.
+                            {pageToDelete?.isHomePage && (
+                                <div className="mt-2 text-red-600 font-medium">
+                                    This is your home page and cannot be deleted.
+                                </div>
+                            )}
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={handleDeleteConfirm}
+                            disabled={isDeleting || pageToDelete?.isHomePage}
+                            className="bg-red-600 hover:bg-red-700"
+                        >
+                            {isDeleting ? 'Deleting...' : 'Delete'}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }
