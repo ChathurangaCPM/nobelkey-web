@@ -110,7 +110,7 @@ export async function POST(req: NextRequest) {
         // Only optimize images
         if (fileCategory === 'images') {
           try {
-            processedData = await optimizeImage(originalData);
+            processedData = await optimizeImage(originalData as Uint8Array);
             compressionRatio = (
               (1 - processedData.length / originalData.length) * 100
             ).toFixed(1) + '%';
