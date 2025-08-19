@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import { SiteProvider } from "@/providers/site-provider";
+import NextTopLoader from "nextjs-toploader";
 
 
 export const metadata: Metadata = {
@@ -19,6 +20,7 @@ export default function RootLayout({
     return (
         <SiteProvider>
             <Header />
+            <NextTopLoader color="#fff" />
             {children}
             <Footer />
         </SiteProvider>
