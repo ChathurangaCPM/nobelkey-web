@@ -22,7 +22,13 @@ const MAX_WIDTH = 1920;
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB for documents, 5MB for images
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB for images
 
-async function optimizeImage(fileBuffer: Buffer): Promise<Buffer> {
+interface OptimizationResult {
+  buffer: Buffer;
+  compressionRatio: string;
+  wasOptimized: boolean;
+}
+
+async function optimizeImage(fileBuffer: Buffer): Promise<OptimizationResult> {
   try {
     const image = sharp(fileBuffer);
     const metadata = await image.metadata();
@@ -51,11 +57,33 @@ async function optimizeImage(fileBuffer: Buffer): Promise<Buffer> {
       });
     }
     
-    return await pipeline.toBuffer();
+    const optimizedBuffer = await pipeline.toBuffer();
+    const compressionRatio = (
+      (1 - optimizedBuffer.length / fileBuffer.length) * 100
+    ).toFixed(1) + '%';
+    
+    return {
+      buffer: optimizedBuffer,
+      compressionRatio,
+      wasOptimized: true
+    };
   } catch (error) {
     console.error('Error optimizing image:', error);
-    return fileBuffer; // Return original if optimization fails
+    return {
+      buffer: fileBuffer,
+      compressionRatio: '0%',
+      wasOptimized: false
+    };
   }
+}
+
+async function fileToBuffer(file: File): Promise<Buffer> {
+  const arrayBuffer = await file.arrayBuffer();
+  // Create a new Buffer explicitly from the ArrayBuffer
+  const uint8Array = new Uint8Array(arrayBuffer);
+  const buffer = Buffer.allocUnsafe(uint8Array.length);
+  buffer.set(uint8Array);
+  return buffer;
 }
 
 export async function POST(req: NextRequest) {
@@ -107,29 +135,23 @@ export async function POST(req: NextRequest) {
           throw new Error(`File ${file.name} exceeds maximum size of ${maxSizeMB}MB for ${fileCategory}`);
         }
 
-        // Convert File to Buffer using a more explicit approach
-        const bytes = await file.arrayBuffer();
-        const originalBuffer = Buffer.from(new Uint8Array(bytes));
-        let processedBuffer = originalBuffer;
+        // Convert File to Buffer
+        const originalBuffer = await fileToBuffer(file);
+        let finalBuffer = originalBuffer;
         let compressionRatio = '0%';
 
         // Only optimize images
         if (fileCategory === 'images') {
-          const optimizedBuffer = await optimizeImage(originalBuffer);
-          
-          if (optimizedBuffer !== originalBuffer) {
-            processedBuffer = optimizedBuffer;
-            compressionRatio = (
-              (1 - processedBuffer.length / originalBuffer.length) * 100
-            ).toFixed(1) + '%';
-          }
+          const optimizationResult = await optimizeImage(originalBuffer);
+          finalBuffer = optimizationResult.buffer;
+          compressionRatio = optimizationResult.compressionRatio;
         }
 
         // Generate S3 key
         const s3Key = generateS3Key(file.name, session.user.id!, fileCategory);
 
         // Upload to S3
-        const s3Result = await uploadToS3(processedBuffer, s3Key, file.type);
+        const s3Result = await uploadToS3(finalBuffer, s3Key, file.type);
 
         // Create MediaLibrary entry
         const mediaEntry = await MediaLibrary.create({
@@ -141,9 +163,9 @@ export async function POST(req: NextRequest) {
           url: s3Result.url,
           s3Key: s3Result.key,
           s3Bucket: s3Result.bucket,
-          fileSize: processedBuffer.length,
+          fileSize: finalBuffer.length,
           originalSize: originalBuffer.length,
-          optimizedSize: fileCategory === 'images' ? processedBuffer.length : undefined,
+          optimizedSize: fileCategory === 'images' ? finalBuffer.length : undefined,
           compressionRatio: fileCategory === 'images' ? compressionRatio : undefined,
           fileCategory: fileCategory,
           mimeType: file.type,
@@ -157,7 +179,7 @@ export async function POST(req: NextRequest) {
           s3Key: s3Result.key,
           s3Bucket: s3Result.bucket,
           originalSize: originalBuffer.length,
-          optimizedSize: processedBuffer.length,
+          optimizedSize: finalBuffer.length,
           compressionRatio: compressionRatio,
           title: mediaEntry.title,
           type: mediaEntry.type,
@@ -165,12 +187,12 @@ export async function POST(req: NextRequest) {
           description: mediaEntry.description,
           fileCategory: fileCategory,
           mimeType: file.type,
-          fileSize: processedBuffer.length
+          fileSize: finalBuffer.length
         });
 
       } catch (fileError) {
         console.error(`Error processing file ${file.name}:`, fileError);
-        throw fileError; // Re-throw to be caught by outer try-catch
+        throw fileError;
       }
     }
 
