@@ -79,9 +79,13 @@ const ContactForm: React.FC<ContactFormProps> = ({
 
     const onSubmit = async (values: FormValues) => {
         try {
+            const payload = {
+                ...values,
+                toEmail
+            }
             const response = await fetch(`/api/site/contact`, {
                 method: 'POST',
-                body: JSON.stringify(values || {})
+                body: JSON.stringify(payload || {})
             });
 
             if (response.ok) {

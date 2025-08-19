@@ -93,21 +93,6 @@ const EmailSettingPage: React.FC = () => {
                 throw new Error('Response not OK');
             }
 
-
-            // setState((prevState: State) => ({
-            //     ...prevState,
-            //     data: {
-            //         ...prevState?.data,
-            //         theme: {
-            //             ...prevState?.data?.theme,
-            //             emailSettings: {
-            //                 ...prevState?.data?.theme?.emailSettings,
-            //                 ...values
-            //             }
-            //         }
-            //     }
-            // }));
-
             toast.success("Updated!", {
                 position: 'top-center',
                 richColors: true,
@@ -147,11 +132,11 @@ const EmailSettingPage: React.FC = () => {
                 <button onClick={() => {
                     setActiveTab('smtp');
                     setValue('type', 'smtp')
-                }} className={`p-3 px-5 ${activeTab === "smtp" ? 'bg-primary' : ''} rounded-md`}>SMTP</button>
+                }} className={`p-3 px-5 ${activeTab === "smtp" ? 'bg-primary text-white font-semibold' : ''} rounded-md`}>SMTP</button>
                 <button onClick={() => {
                     setActiveTab('zepto');
                     setValue('type', 'zepto')
-                }} className={`p-3 px-5 ${activeTab === "zepto" ? 'bg-primary' : ''} rounded-md`}>ZEPTO Mail</button>
+                }} className={`p-3 px-5 ${activeTab === "zepto" ? 'bg-primary text-white font-semibold' : ''} rounded-md`}>ZEPTO Mail</button>
             </div>
 
             <div>

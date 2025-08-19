@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
                     (async () => {
                         const info = await transporter.sendMail({
                             from: formData?.email,
-                            to: "chathurangacpm@gmail.com",
+                            to: formData?.toEmail || 'mail.aurorasolutions@gmail.com',
                             subject: "Nobelkey Contact Form",
                             html: html, // HTML body
                         });
@@ -121,7 +121,7 @@ export async function POST(req: NextRequest) {
                                 {
                                     "email_address":
                                     {
-                                        "address": getEmailSettings?.zepto_from_address || "noreply@nobelkey.lk",
+                                        "address": formData?.toEmail || 'mail.aurorasolutions@gmail.com',
                                         "name": getEmailSettings?.zepto_from_name || "Nobelkey"
                                     }
                                 }

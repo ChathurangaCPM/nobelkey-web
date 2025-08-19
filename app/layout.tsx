@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import Providers from "@/providers/providers";
+import NextTopLoader from "nextjs-toploader";
 
 
 const Vietnam_Pro = Be_Vietnam_Pro({ 
@@ -51,6 +52,7 @@ export default async function RootLayout({
       <body
         className={`${Vietnam_Pro.variable} ${headingFontExtraBold.variable} ${Barlow_Condensed_Font.variable} antialiased`}
       >
+        <NextTopLoader color="#2563EB" />
         <Providers session={session}>
           {children}
         </Providers>
