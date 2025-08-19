@@ -22,7 +22,7 @@ const MAX_WIDTH = 1920;
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB for documents, 5MB for images
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB for images
 
-async function optimizeImage(imageData: any): Promise<Uint8Array> {
+async function optimizeImage(imageData: Buffer): Promise<Buffer> {
   const image = sharp(imageData);
   const metadata = await image.metadata();
   
@@ -51,7 +51,7 @@ async function optimizeImage(imageData: any): Promise<Uint8Array> {
   }
   
   const optimizedBuffer = await pipeline.toBuffer();
-  return new Uint8Array(optimizedBuffer);
+  return optimizedBuffer;
 }
 
 export async function POST(req: NextRequest) {
@@ -101,9 +101,9 @@ export async function POST(req: NextRequest) {
           throw new Error(`File ${file.name} exceeds maximum size of ${maxSizeMB}MB for ${fileCategory}`);
         }
 
-        // Convert file to Uint8Array directly with type assertion
+        // Convert file to Buffer directly
         const arrayBuffer = await file.arrayBuffer();
-        const originalData = new Uint8Array(arrayBuffer as ArrayBuffer);
+        const originalData = Buffer.from(arrayBuffer);
         let processedData = originalData;
         let compressionRatio = '0%';
 
@@ -121,14 +121,13 @@ export async function POST(req: NextRequest) {
           }
         }
 
-        // Convert to Buffer for S3 upload
-        const uploadBuffer = Buffer.from(processedData);
+        // processedData is already a Buffer, no need to convert
 
         // Generate S3 key
         const s3Key = generateS3Key(file.name, session.user.id!, fileCategory);
 
         // Upload to S3
-        const s3Result = await uploadToS3(uploadBuffer, s3Key, file.type);
+        const s3Result = await uploadToS3(processedData, s3Key, file.type);
 
         // Create MediaLibrary entry
         const mediaEntry = await MediaLibrary.create({
