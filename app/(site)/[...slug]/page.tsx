@@ -1,5 +1,8 @@
 "use client";
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 // Type definitions
 
 import { useEffect, useState } from "react";
@@ -145,6 +148,7 @@ const PagesView = ({ params }: { params: { slug: string[] } }) => {
             }
 
             const { data } = await res.json();
+            
             setPageData(data);
         } catch (error) {
             console.error('Error fetching page data:', error);

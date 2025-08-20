@@ -3,6 +3,10 @@ import Pages from "@/modals/Pages";
 import Theme from "@/modals/Theme";
 import { NextResponse } from "next/server";
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET() {
     try {
         // Connect to MongoDB
