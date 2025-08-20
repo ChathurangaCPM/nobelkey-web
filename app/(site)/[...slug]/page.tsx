@@ -1,8 +1,9 @@
-"use client";
-
 // Type definitions
 
-import { useEffect, useState } from "react";
+// Force dynamic rendering - this ensures the page is not statically generated
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import BlogSection from "@/app/components/home/blogSection";
 import FeaturedServices from "@/app/components/home/featuredServices";
 import GetQuote from "@/app/components/home/getQuote";
@@ -116,53 +117,45 @@ async function getPagesViewPageData(slug: string) {
     }
 }
 
-const PagesView = ({ params }: { params: { slug: string[] } }) => {
-    const [pageData, setPageData] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+export async function generateMetadata({ params }: { params: { slug: string[] } }) {
+    const baseUrl = getBaseUrl();
+    const getPageSlug = params?.slug[params?.slug.length - 1] 
+    const ogImageUrl = `${baseUrl}/images/og-image.png`;
+    const getPageData = await getPagesViewPageData(getPageSlug);
 
-    const getPageSlug = params?.slug[params?.slug.length - 1].trim();
-
-    const fetchPageData = async () => {
-        try {
-            setLoading(true);
-            setError(null);
-            
-            // Add timestamp to prevent any caching
-            const timestamp = new Date().getTime();
-            const res = await fetch(`/api/site/page-data?slug=${getPageSlug}&t=${timestamp}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Cache-Control': 'no-cache, no-store, must-revalidate',
-                    'Pragma': 'no-cache',
+    return {
+        title: getPageData?.seoData?.basicSeo?.title || '',
+        description: getPageData?.seoData?.basicSeo?.description || '',
+        keywords: getPageData?.seoData?.basicSeo?.keywords || '',
+        metadataBase: new URL(baseUrl),
+        openGraph: {
+            title: getPageData?.seoData?.basicSeo?.title || '',
+            description: (getPageData?.seoData?.ogSeo?.description || getPageData?.seoData?.basicSeo?.description) || '',
+            images: [
+                {
+                    url: ogImageUrl,
+                    alt: getPageData?.seoData?.basicSeo?.title || '',
+                    width: 1200,
+                    height: 630,
                 },
-                cache: 'no-store'
-            });
-
-            if (!res.ok) {
-                throw new Error('Failed to fetch page data');
-            }
-
-            const { data } = await res.json();
-            setPageData(data);
-        } catch (error) {
-            console.error('Error fetching page data:', error);
-            setError('Failed to load page data');
-        } finally {
-            setLoading(false);
-        }
+            ],
+            siteName: 'City Cabs France',
+            type: 'website',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: getPageData?.seoData?.basicSeo?.title || '',
+            description: (getPageData?.seoData?.ogSeo?.description || getPageData?.seoData?.basicSeo?.description) || '',
+            images: [ogImageUrl],
+        },
     };
+}
 
-    useEffect(() => {
-        fetchPageData();
-        
-        // Set up polling to check for updates every 30 seconds
-        const interval = setInterval(fetchPageData, 30000);
-        
-        return () => clearInterval(interval);
-    }, [getPageSlug]);
-
+const PagesView = async ({ params }: { params: { slug: string[] } }) => {
+    const getPageSlug = params?.slug[params?.slug.length - 1].trim();
+    const getPageData = await getPagesViewPageData(getPageSlug);
+    const pageData = getPageData;   
+    
     const renderComponent = (component: PageComponent) => {
         const Component = componentMap[component.customName];
 
@@ -173,33 +166,6 @@ const PagesView = ({ params }: { params: { slug: string[] } }) => {
 
         return <Component serviceItems={[]} key={component.id} {...component.props} />;
     };
-
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="text-center flex items-center justify-center flex-col">
-                    <Loader2 size={24} className="animate-spin text-blue-500" />
-                    <p className="mt-4 text-gray-600">Loading...</p>
-                </div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="text-center">
-                    <p className="text-red-600 mb-4">{error}</p>
-                    <button 
-                        onClick={fetchPageData}
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    >
-                        Retry
-                    </button>
-                </div>
-            </div>
-        );
-    }
 
     if (!pageData?.components || pageData.components.length === 0) {
         return <div>No components to display</div>;

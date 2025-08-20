@@ -1,6 +1,3 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import MainBanner from "../components/mainBanner";
 import WelcomeSection from "../components/home/welcomeSection";
 import WhatWeOffer from "../components/home/whatWeOffer";
@@ -14,8 +11,10 @@ import FeaturedServices from "../components/home/featuredServices";
 import RecentProjects from "../components/home/recentProjects";
 import OurBrandRow from "../components/home/ourBrandRow";
 import GetQuote from "../components/home/getQuote";
-import { Loader2 } from "lucide-react";
 
+// Force dynamic rendering - this ensures the page is not statically generated
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 // Type definitions
 // Generic type for component props
@@ -41,8 +40,6 @@ const componentMap = {
   getQuote: GetQuote,
   blogSection: BlogSection,
 } as const;
-
-
 
 // Helper function to get the base URL
 function getBaseUrl() {
@@ -82,50 +79,42 @@ async function getHomePageData() {
   }
 }
 
-const Home: React.FC = () => {
-  const [homeData, setHomeData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export async function generateMetadata() {
+  const baseUrl = getBaseUrl();
+  const ogImageUrl = `${baseUrl}/images/og-image.png`;
+  const homeData = await getHomePageData();
 
-  const fetchHomeData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      // Add timestamp to prevent any caching
-      const timestamp = new Date().getTime();
-      const res = await fetch(`/api/site/home-page?t=${timestamp}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
+  return {
+    title: homeData?.seoData?.basicSeo?.title || '',
+    description: homeData?.seoData?.basicSeo?.description || '',
+    keywords: homeData?.seoData?.basicSeo?.keywords || '',
+    metadataBase: new URL(baseUrl),
+    openGraph: {
+      title: homeData?.seoData?.basicSeo?.title || '',
+      description: (homeData?.seoData?.ogSeo?.description || homeData?.seoData?.basicSeo?.description) || '',
+      images: [
+        {
+          url: ogImageUrl,
+          alt: homeData?.seoData?.basicSeo?.title || '',
+          width: 1200,
+          height: 630,
         },
-        cache: 'no-store'
-      });
-
-      if (!res.ok) {
-        throw new Error('Failed to fetch home data');
-      }
-
-      const { data } = await res.json();
-      setHomeData(data);
-    } catch (error) {
-      console.error('Error fetching home data:', error);
-      setError('Failed to load page data');
-    } finally {
-      setLoading(false);
-    }
+      ],
+      siteName: 'City Cabs France',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: homeData?.seoData?.basicSeo?.title || '',
+      description: (homeData?.seoData?.ogSeo?.description || homeData?.seoData?.basicSeo?.description) || '',
+      images: [ogImageUrl],
+    },
   };
+}
 
-  useEffect(() => {
-    fetchHomeData();
-    
-    // Set up polling to check for updates every 30 seconds
-    const interval = setInterval(fetchHomeData, 30000);
-    
-    return () => clearInterval(interval);
-  }, []);
+const Home: React.FC = async () => {
+  const homeData = await getHomePageData();
+  const { pageData } = homeData;
 
   const renderComponent = (component: PageComponent) => {
     const Component = componentMap[component.customName];
@@ -138,42 +127,15 @@ const Home: React.FC = () => {
     return <Component serviceItems={[]} key={component.id} {...component.props} />;
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center flex items-center justify-center flex-col">
-          <Loader2 size={24} className="animate-spin text-blue-500" />
-          <p className="mt-4 text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <p className="text-red-600 mb-4">{error}</p>
-          <button 
-            onClick={fetchHomeData}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  if (!homeData?.pageData?.components || homeData.pageData.components.length === 0) {
+  if (!pageData?.components || pageData.components.length === 0) {
     return <div>No components to display</div>;
   }
 
-  console.log("pageData.components===", homeData.pageData.components);
+  console.log("pageData.components===", pageData.components);
 
   return (
     <div>
-      {homeData.pageData.components.map((component: PageComponent) => renderComponent(component))}
+      {pageData.components.map((component: PageComponent) => renderComponent(component))}
     </div>
   );
 };
