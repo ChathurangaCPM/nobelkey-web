@@ -91,7 +91,9 @@ function getBaseUrl() {
 
 async function getPagesViewPageData(slug: string) {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/site/page-data?slug=${slug}`, {
+        // Add timestamp to prevent any caching
+        const timestamp = new Date().getTime();
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/site/page-data?slug=${slug}&t=${timestamp}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

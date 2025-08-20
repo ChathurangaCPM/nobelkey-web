@@ -25,12 +25,16 @@ export function SiteProvider({ children }: SiteProviderProps) {
 
     const getCurrentUserMeta = async () => {
         try {
-            const res = await fetch('/api/site/theme', {
+            // Add timestamp to prevent any caching
+            const timestamp = new Date().getTime();
+            const res = await fetch(`/api/site/theme?t=${timestamp}`, {
                 method: "GET",
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                },
+                cache: 'no-store'
             });
-
-            
-
 
             if (res && res.status === 200) {
                 const { data } = await res.json();

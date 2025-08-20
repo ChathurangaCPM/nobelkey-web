@@ -57,7 +57,9 @@ function getBaseUrl() {
 
 async function getHomePageData() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/site/home-page`, {
+    // Add timestamp to prevent any caching
+    const timestamp = new Date().getTime();
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/site/home-page?t=${timestamp}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
