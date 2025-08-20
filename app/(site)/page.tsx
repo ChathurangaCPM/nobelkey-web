@@ -12,6 +12,10 @@ import RecentProjects from "../components/home/recentProjects";
 import OurBrandRow from "../components/home/ourBrandRow";
 import GetQuote from "../components/home/getQuote";
 
+// Force dynamic rendering - this ensures the page is not statically generated
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 
 // Type definitions
 // Generic type for component props
@@ -57,11 +61,11 @@ async function getHomePageData() {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
         ...(process.env.NEXTAUTH_URL && { 'origin': process.env.NEXTAUTH_URL })
       },
-      next: {
-        revalidate: 3600
-      }
+      cache: 'no-store'
     });
 
     if (!res.ok) {
@@ -128,6 +132,8 @@ const Home: React.FC = async () => {
     return <div>No components to display</div>;
   }
 
+  console.log("pageData.components===", pageData.components);
+  
 
   return (
     <div>

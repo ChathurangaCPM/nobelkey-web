@@ -1,5 +1,9 @@
 // Type definitions
 
+// Force dynamic rendering - this ensures the page is not statically generated
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import BlogSection from "@/app/components/home/blogSection";
 import FeaturedServices from "@/app/components/home/featuredServices";
 import GetQuote from "@/app/components/home/getQuote";
@@ -91,21 +95,21 @@ async function getPagesViewPageData(slug: string) {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
                 ...(process.env.NEXTAUTH_URL && { 'origin': process.env.NEXTAUTH_URL })
             },
-            next: {
-                revalidate: 3600
-            }
+            cache: 'no-store'
         });
 
         if (!res.ok) {
-            throw new Error('Failed to fetch home data');
+            throw new Error('Failed to fetch page data');
         }
 
         const { data } = await res.json();
         return data;
     } catch (error) {
-        console.error('Error fetching home data:', error);
+        console.error('Error fetching page data:', error);
         return null;
     }
 }
