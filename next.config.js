@@ -39,12 +39,10 @@ module.exports = {
     },
     // Force dynamic rendering - prevent static generation
     experimental: {
-        dynamicIO: true,
+        // dynamicIO is not a valid option in Next.js 14
     },
     // Disable static optimization for all pages
     output: 'standalone',
-    // Force dynamic rendering for all pages
-    generateStaticParams: false,
     // Add headers to prevent caching
     async headers() {
         return [

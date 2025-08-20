@@ -27,6 +27,20 @@ export async function getHomePageData() {
     try {
         // Always use direct database access for now to avoid issues
         await connectDB();
+        
+        // First, get the theme data to find the selected home page
+        const Theme = (await import("@/modals/Theme")).default;
+        const themeData = await Theme.find().lean().exec();
+        
+        if (themeData && themeData[0] && themeData[0]?.selectedHomePage) {
+            // Fetch the selected home page
+            const pageData = await Pages.findOne({
+                _id: themeData[0]?.selectedHomePage
+            }).lean().exec();
+            return pageData;
+        }
+        
+        // Fallback: try to find a page marked as home
         const pageData = await Pages.findOne({ isHome: true }).lean().exec();
         return pageData;
     } catch (error) {

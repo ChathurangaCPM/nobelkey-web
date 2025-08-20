@@ -1,11 +1,4 @@
-"use client";
-
-// Force dynamic rendering
-export const dynamic = 'force-dynamic';
-
-// Type definitions
-
-import { useEffect, useState } from "react";
+import { Metadata, Viewport } from 'next';
 import BlogSection from "@/app/components/home/blogSection";
 import FeaturedServices from "@/app/components/home/featuredServices";
 import GetQuote from "@/app/components/home/getQuote";
@@ -31,17 +24,21 @@ import ProjectOverview from "@/app/components/innerPages/projectOverview";
 import ProjectSlider from "@/app/components/innerPages/projectSlider";
 import ContactCard from "@/app/components/innerPages/contactCard";
 import ContactForm from "@/app/components/innerPages/contactForm";
-import { Loader2 } from "lucide-react";
+import { getPageDataBySlug } from "@/lib/dataFetchers";
 
-// Generic type for component props
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+// Type definitions
 type GenericProps = {
-    [key: string]: unknown;  // More type-safe than 'any'
+    [key: string]: unknown;
 };
 
 interface PageComponent {
     id: string;
     type: string;
-    customName: keyof typeof componentMap;  // Ensures customName matches componentMap keys
+    customName: keyof typeof componentMap;
     props: GenericProps;
 }
 
@@ -77,143 +74,131 @@ const componentMap = {
 
 } as const;
 
-
-
-
-
-// Helper function to get the base URL
-function getBaseUrl() {
-    if (process.env.NEXT_PUBLIC_SITE_URL) {
-        return process.env.NEXT_PUBLIC_SITE_URL;
+// Generate viewport for SEO
+export async function generateViewport({ params }: { params: { slug: string[] } }): Promise<Viewport> {
+    try {
+        const pageSlug = params?.slug[params?.slug.length - 1]?.trim();
+        const pageData = await getPageDataBySlug(pageSlug) as any;
+        const basicSeo = pageData?.seoData?.basicSeo;
+        
+        return {
+            width: 'device-width',
+            initialScale: 1.0,
+            ...(basicSeo?.viewport && { themeColor: '#000000' }),
+        };
+    } catch (error) {
+        console.error('Error generating viewport:', error);
     }
-    if (process.env.SITE_ENV === 'development') {
-        return 'http://localhost:1222';
-    }
-    return process.env.NEXTAUTH_URL || 'https://noblekey.lk';
+
+    return {
+        width: 'device-width',
+        initialScale: 1.0,
+    };
 }
 
-async function getPagesViewPageData(slug: string) {
+// Generate metadata for SEO
+export async function generateMetadata({ params }: { params: { slug: string[] } }): Promise<Metadata> {
     try {
-        // Add timestamp to prevent any caching
-        const timestamp = new Date().getTime();
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/site/page-data?slug=${slug}&t=${timestamp}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Cache-Control': 'no-cache, no-store, must-revalidate',
-                'Pragma': 'no-cache',
-                ...(process.env.NEXTAUTH_URL && { 'origin': process.env.NEXTAUTH_URL })
-            },
-            cache: 'no-store'
-        });
+        const pageSlug = params?.slug[params?.slug.length - 1]?.trim();
+        const pageData = await getPageDataBySlug(pageSlug) as any;
 
-        if (!res.ok) {
-            throw new Error('Failed to fetch page data');
+        console.log("pageData===", pageData);
+        
+        if (pageData) {
+            // Prioritize seoData structure over legacy meta fields
+            const basicSeo = pageData.seoData?.basicSeo;
+            const ogSeo = pageData.seoData?.ogSeo;
+            
+            // Get title with priority: seoData.basicSeo.title > metaTitle > title > fallback
+            const title = basicSeo?.title || pageData.metaTitle || pageData.title || `NobleKey - ${pageSlug}`;
+            
+            // Get description with priority: seoData.basicSeo.description > metaDescription > description > fallback
+            const description = basicSeo?.description || pageData.metaDescription || pageData.description || `Learn more about ${pageSlug}`;
+            
+            // Get keywords with priority: seoData.basicSeo.keywords > metaKeywords > fallback
+            const keywords = basicSeo?.keywords || pageData.metaKeywords || `NobleKey, ${pageSlug}, services, solutions`;
+            
+            // Get Open Graph data with priority: seoData.ogSeo > basic seo > legacy fields > fallback
+            const ogTitle = ogSeo?.title || basicSeo?.title || pageData.metaTitle || pageData.title || `NobleKey - ${pageSlug}`;
+            const ogDescription = ogSeo?.description || basicSeo?.description || pageData.metaDescription || pageData.description || `Learn more about ${pageSlug}`;
+            const ogImage = ogSeo?.image;
+            
+            // Validate OpenGraph type - only allow valid types
+            const validOgTypes = ['website', 'article', 'book', 'profile', 'music.song', 'music.album', 'music.playlist', 'music.radio_station', 'video.movie', 'video.episode', 'video.tv_show', 'video.other'];
+            const ogType = validOgTypes.includes(ogSeo?.type?.toLowerCase() || '') ? ogSeo?.type?.toLowerCase() : 'website';
+            const siteName = ogSeo?.siteName || 'NobleKey';
+
+            const metadata: Metadata = {
+                title,
+                description,
+                keywords,
+                robots: basicSeo?.robots || 'index, follow',
+                openGraph: {
+                    title: ogTitle,
+                    description: ogDescription,
+                    type: ogType as any,
+                    url: `/${params.slug.join('/')}`,
+                    siteName,
+                    ...(ogImage && { images: [{ url: ogImage }] }),
+                },
+                twitter: {
+                    card: 'summary_large_image',
+                    title: ogTitle,
+                    description: ogDescription,
+                    ...(ogImage && { images: [ogImage] }),
+                },
+            };
+
+            return metadata;
+        }
+    } catch (error) {
+        console.error('Error generating metadata:', error);
+    }
+
+    // Fallback metadata
+    const pageSlug = params?.slug[params?.slug.length - 1]?.trim() || 'Page';
+    return {
+        title: `NobleKey - ${pageSlug}`,
+        description: `Learn more about ${pageSlug}`,
+    };
+}
+
+const PagesView = async ({ params }: { params: { slug: string[] } }) => {
+    try {
+        const pageSlug = params?.slug[params?.slug.length - 1]?.trim();
+        const pageData = await getPageDataBySlug(pageSlug) as any;
+
+        if (!pageData?.components || pageData.components.length === 0) {
+            return <div>No components to display</div>;
         }
 
-        const { data } = await res.json();
-        return data;
-    } catch (error) {
-        console.error('Error fetching page data:', error);
-        return null;
-    }
-}
+        const renderComponent = (component: PageComponent) => {
+            const Component = componentMap[component.customName];
 
-const PagesView = ({ params }: { params: { slug: string[] } }) => {
-    const [pageData, setPageData] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    const getPageSlug = params?.slug[params?.slug.length - 1].trim();
-
-    const fetchPageData = async () => {
-        try {
-            setLoading(true);
-            setError(null);
-            
-            // Add timestamp to prevent any caching
-            const timestamp = new Date().getTime();
-            const res = await fetch(`/api/site/page-data?slug=${getPageSlug}&t=${timestamp}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Cache-Control': 'no-cache, no-store, must-revalidate',
-                    'Pragma': 'no-cache',
-                },
-                cache: 'no-store'
-            });
-
-            if (!res.ok) {
-                throw new Error('Failed to fetch page data');
+            if (!Component) {
+                console.warn(`Component ${component.customName} not found in componentMap`);
+                return null;
             }
 
-            const { data } = await res.json();
-            
-            setPageData(data);
-        } catch (error) {
-            console.error('Error fetching page data:', error);
-            setError('Failed to load page data');
-        } finally {
-            setLoading(false);
-        }
-    };
+            return <Component serviceItems={[]} key={component.id} {...component.props} />;
+        };
 
-    useEffect(() => {
-        fetchPageData();
-        
-        // Set up polling to check for updates every 30 seconds
-        const interval = setInterval(fetchPageData, 30000);
-        
-        return () => clearInterval(interval);
-    }, [getPageSlug]);
-
-    const renderComponent = (component: PageComponent) => {
-        const Component = componentMap[component.customName];
-
-        if (!Component) {
-            console.warn(`Component ${component.customName} not found in componentMap`);
-            return null;
-        }
-
-        return <Component serviceItems={[]} key={component.id} {...component.props} />;
-    };
-
-    if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="text-center flex items-center justify-center flex-col">
-                    <Loader2 size={24} className="animate-spin text-blue-500" />
-                    <p className="mt-4 text-gray-600">Loading...</p>
-                </div>
+            <div>
+                {pageData.components.map((component: PageComponent) => renderComponent(component))}
             </div>
         );
-    }
-
-    if (error) {
+    } catch (error) {
+        console.error('Error rendering page:', error);
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center">
-                    <p className="text-red-600 mb-4">{error}</p>
-                    <button 
-                        onClick={fetchPageData}
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    >
-                        Retry
-                    </button>
+                    <p className="text-red-600 mb-4">Failed to load page data</p>
+                    <p className="text-gray-600">Please try refreshing the page</p>
                 </div>
             </div>
         );
     }
-
-    if (!pageData?.components || pageData.components.length === 0) {
-        return <div>No components to display</div>;
-    }
-
-    return (
-        <div>
-            {pageData.components.map((component: PageComponent) => renderComponent(component))}
-        </div>
-    );
 };
 
 export default PagesView;
