@@ -41,6 +41,10 @@ module.exports = {
     experimental: {
         dynamicIO: true,
     },
+    // Disable static optimization for all pages
+    output: 'standalone',
+    // Force dynamic rendering for all pages
+    generateStaticParams: false,
     // Add headers to prevent caching
     async headers() {
         return [

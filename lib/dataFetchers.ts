@@ -47,14 +47,15 @@ export async function getPageDataBySlug(slug: string) {
 
         // During runtime, use API
         const baseUrl = getApiBaseUrl();
-        const res = await fetch(`${baseUrl}/api/site/page-data?slug=${slug}`, {
+        const timestamp = new Date().getTime();
+        const res = await fetch(`${baseUrl}/api/site/page-data?slug=${slug}&t=${timestamp}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
             },
-            next: {
-                revalidate: 3600
-            }
+            cache: 'no-store'
         });
 
         if (!res.ok) {

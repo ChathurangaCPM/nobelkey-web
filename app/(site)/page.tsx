@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
 import MainBanner from "../components/mainBanner";
 import WelcomeSection from "../components/home/welcomeSection";
 import WhatWeOffer from "../components/home/whatWeOffer";
