@@ -37,10 +37,53 @@ module.exports = {
             }
         ],
     },
-    // reactStrictMode: true,
-    // distDir: 'dist',
-    // output: 'export'
-    // reactStrictMode: true,
+    // Force dynamic rendering - prevent static generation
+    experimental: {
+        dynamicIO: true,
+    },
+    // Add headers to prevent caching
+    async headers() {
+        return [
+            {
+                source: '/(.*)',
+                headers: [
+                    {
+                        key: 'Cache-Control',
+                        value: 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+                    },
+                    {
+                        key: 'Pragma',
+                        value: 'no-cache',
+                    },
+                    {
+                        key: 'Expires',
+                        value: '0',
+                    },
+                    {
+                        key: 'Surrogate-Control',
+                        value: 'no-store',
+                    },
+                ],
+            },
+            {
+                source: '/api/(.*)',
+                headers: [
+                    {
+                        key: 'Cache-Control',
+                        value: 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+                    },
+                    {
+                        key: 'Pragma',
+                        value: 'no-cache',
+                    },
+                    {
+                        key: 'Expires',
+                        value: '0',
+                    },
+                ],
+            },
+        ];
+    },
     async redirects() {
         return [
             // Example redirects - replace these with your actual redirect needs
